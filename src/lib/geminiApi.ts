@@ -16,21 +16,29 @@ export async function getBookRecommendations(books: any[]) {
   const genAI = new GoogleGenerativeAI(apiKey);
 
   // モデルの初期化 (Gemini 2.5 Flash)
-  const model = genAI.getGenerativeModel({
+const model = genAI.getGenerativeModel({
     model: "gemini-2.5-flash",
     generationConfig: {
       responseMimeType: "application/json",
       responseSchema: {
-        type: SchemaType.ARRAY,
-        items: {
-          type: SchemaType.OBJECT,
-          properties: {
-            bookTitle: { type: SchemaType.STRING },
-            author: { type: SchemaType.STRING },
-            librarianComment: { type: SchemaType.STRING },
-          },
-          required: ["bookTitle", "author", "librarianComment"]
-        }
+        type: SchemaType.OBJECT, // 全体は1つのオブジェクト
+        properties: {
+          // 総括コメントを1つ定義
+          librarianSummary: { type: SchemaType.STRING },
+          // 本のリストを配列として定義
+          recommendedBooks: {
+            type: SchemaType.ARRAY,
+            items: {
+              type: SchemaType.OBJECT,
+              properties: {
+                bookTitle: { type: SchemaType.STRING },
+                author: { type: SchemaType.STRING },
+              },
+              required: ["bookTitle", "author"]
+            }
+          }
+        },
+        required: ["librarianSummary", "recommendedBooks"]
       }
     }
   });
@@ -42,7 +50,10 @@ export async function getBookRecommendations(books: any[]) {
   const prompt = `
     あなたはプロの書評家であり、読書コンシェルジュです。
     以下のユーザーの本棚（読んだ本のリスト）を分析して、このユーザーの好みや傾向を特定してください。
-    その上で、ユーザーの好みに基づいて、ユーザーがまだ読んだことのない、次に読むべき本を具体的に3つ提案してください。
+    その上で、ユーザーの好みに基づいて、ユーザーがまだ読んだことのない、次に読むべきおすすめの本を具体的に1つ提案してください。
+    その本をおすすめする理由も説明してください。
+    さらに次点でおすすめの本を二冊提案してください。
+    その二冊を進める理由も短く簡易的に説明してください。
 
 
     【ユーザーの本棚データ】
@@ -52,7 +63,7 @@ export async function getBookRecommendations(books: any[]) {
     1. 各提案には「タイトル」「著者」「なぜおすすめか（理由）」を含めること。
     2. 提案する本3つのうち1つの提案は、少しだけ異なる角度（ジャンルや作家）から選ぶこと。
     3. 日本語で親しみやすい口調で回答してください。
-    4. 出力は10行以内に収めてください。
+    4. 出力は500文字以内に収めてください。
   `;
 
   try {
