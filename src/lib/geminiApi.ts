@@ -72,6 +72,6 @@ const model = genAI.getGenerativeModel({
     return response.text();
   } catch (error) {
     console.error("Gemini API Error:", error);
-    return "AIからの応答取得に失敗しました。";
+    return null;
   }
 }
