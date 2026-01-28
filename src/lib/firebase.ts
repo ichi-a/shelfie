@@ -12,12 +12,12 @@ import { getFirestore } from "firebase/firestore";
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: "shelfie-1b0b1.firebaseapp.com",
-  projectId: "shelfie-1b0b1",
-  storageBucket: "shelfie-1b0b1.firebasestorage.app",
-  messagingSenderId: "805668019060",
-  appId: "1:805668019060:web:77f02164bb403d917faa21",
-  measurementId: "G-KJTJ6W1C17"
+  authDomain: "shelfie-ee95c.firebaseapp.com",
+  projectId: "shelfie-ee95c",
+  storageBucket: "shelfie-ee95c.firebasestorage.app",
+  messagingSenderId: "88224647381",
+  appId: "1:88224647381:web:7ceb4b86af4829a85cfa5c",
+  measurementId: "G-7XF8JTWMMK"
 };
 
 // Initialize Firebase
@@ -32,7 +32,7 @@ const firebaseConfig = {
 // getApps(): 既に初期化されたFirebaseアプリの配列を取得
 // 配列が空（length === 0）の場合は初期化、そうでなければ既存のアプリを取得
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
-
+// const analytics = getAnalytics(app);
 // export const analytics =
 //   typeof window !== "undefined" ? getAnalytics(app) : null;
 // ──────────────────────────────────────────────
