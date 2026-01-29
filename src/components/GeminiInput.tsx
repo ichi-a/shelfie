@@ -1,11 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react"; // useEffectを追加
+import { auth } from "@/lib/firebase"; // authをインポート
+import { onAuthStateChanged } from "firebase/auth"; // 監視用
 import { getBookRecommendations } from "@/lib/geminiApi";
 // import { SearchBooks } from "./SearchBooks ";
 import { SearchBooksRgemini } from "@/lib/searchBooksRakuten";
 import { LoadingAnime } from "./ui/LoadingAnime";
-import { saveBookToDb } from "@/lib/booksDb";
+import { saveBookToDb, getMyShelf } from "@/lib/booksDb";
+import { AddShelfButton } from "./ui/AddShelfButton";
 
 export const GeminiInput = () => {
   // recommendation: AIからのテキスト回答
@@ -14,14 +17,25 @@ export const GeminiInput = () => {
   const [bookDetails, setBookDetails] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const books = [
-    { title: "人魚が逃げた", author: "青山美智子", score: "4", comment: "なぜか引き込まれた" },
-    { title: "同士少女よ、敵を撃て", author: "逢坂冬馬", score: "1", comment: "おもんない" },
-    { title: "R帝国", author: "中村文則", score: "2", comment: "哲学色が少し強かった" },
-    { title: "のぼうの城", author: "和田竜", score: "3", comment: "そこそこ" },
-    { title: "三体", author: "劉慈欣", score: "4", comment: "傑作" },
-  ];
+  // 【解説】実データを保持するState
+  const [userBooks, setUserBooks] = useState<any[]>([]);
+
+  // 【解説】画面読み込み時（またはログイン時）に本棚データを取得
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const data = await getMyShelf(user.uid);
+        setUserBooks(data);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+
   const handleAiAdvice = async () => {
+    if (userBooks.length === 0) {
+      alert("まずは本棚に本を追加してみてね！");
+      return;
+    }
     const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms));
     setIsLoading(true);
     setRecommendation(null);
@@ -29,7 +43,7 @@ export const GeminiInput = () => {
 
     try {
       // 1. まずGeminiから提案をもらう
-      const aiResult = await getBookRecommendations(books);
+      const aiResult = await getBookRecommendations(userBooks);
       if(!aiResult) {
         alert("現在混みあっています。時間を置いて再度お試しください。")
         return
@@ -69,39 +83,9 @@ export const GeminiInput = () => {
       setIsLoading(false);
     }
   };
-  // const handleAiAdvice = async () => {
-  //   setIsLoading(true);
-  //   setRecommendation(null);
-  //   setBookDetails([]);
-
-  //   try {
-  //     // 1. Geminiから提案をもらう
-  //     const aiResult = await getBookRecommendations(books);
-  //     const parsedData = JSON.parse(aiResult);
-  //     setRecommendation(parsedData);
-  //     console.log(parsedData)
-
-  //     // 2. 提案されたタイトルをもとにSearchBooksを実行
-  //     if (parsedData.recommendedBooks) {
-  //       const details = await Promise.all(
-  //         parsedData.recommendedBooks.map(async (book: any) => {
-  //           const searchData = await SearchBooks(book.bookTitle + book.author);
-  //           console.log(searchData)
-  //           return searchData?.items?.[0]; // 検索結果の1件目を返
-  //         })
-  //       );
-  //       // nullを除外してセット
-  //       setBookDetails(details.filter(d => d !== undefined));
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
 
   return (
-    <div className="mb-44 w-full mx-auto text-center rounded-xl border border-gray-500 p-5">
+    <div className="mb-44 w-full mx-auto text-center rounded-xl border border-gray-500 px-5 py-10">
       <p>マイ本棚をもとにおすすめを提案してもらう</p>
       <h3>AIおすすめ提案テスト</h3>
 
@@ -133,8 +117,8 @@ export const GeminiInput = () => {
       <div className="flex justify-center items-center gap-1 w-2/3 mx-auto">
         {bookDetails.map((book, i) => (
           <div key={book.isbn || i} className={`transition-all duration-300 w-32 h-45 mx-auto shadow-lg my-4 ${book ? "opacity-100" : "opacity-0"}`}>
-            {/* <p className="text-sm font-bold truncate">{book.volumeInfo?.title}</p> */}
-            {book?.mediumImageUrl ? (
+            <p className="text-sm font-bold truncate">{book.title}</p>
+            {book?.largeImageUrl ? (
               <img
                 src={book.largeImageUrl}
                 alt={book.title}
@@ -144,6 +128,7 @@ export const GeminiInput = () => {
               <div className="w-full h-32 bg-gray-200 flex items-center justify-center text-xs">本が見つかりません</div>
             )}
             {/* <p className="text-xs text-gray-500 mt-1">{book.volumeInfo?.authors?.join(", ")}</p> */}
+            <AddShelfButton book={book}/>
           </div>
         ))}
       </div>
