@@ -4,6 +4,7 @@ import {
   signOut
 } from "firebase/auth";
 import { auth } from "./firebase"; // 以前作成したfirebase.ts
+import { toast } from "sonner";
 
 // Googleログイン用のプロバイダー（設定）を作成
 const provider = new GoogleAuthProvider();
@@ -16,9 +17,11 @@ export const loginWithGoogle = async () => {
     // ポップアップ画面でログインを実行
     const result = await signInWithPopup(auth, provider);
     console.log("ログイン成功:", result.user.displayName);
+    toast.success("ログインしました")
     return result.user;
   } catch (error) {
     console.error("ログインエラー:", error);
+    toast.error("ログインエラー")
     throw error;
   }
 };
@@ -29,8 +32,9 @@ export const loginWithGoogle = async () => {
 export const logout = async () => {
   try {
     await signOut(auth);
-    console.log("ログアウトしました");
+    toast.info("ログアウトしました");
   } catch (error) {
     console.error("ログアウトエラー:", error);
+    toast.error("ログアウトエラー")
   }
 };

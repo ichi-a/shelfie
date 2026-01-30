@@ -1,5 +1,6 @@
 import { doc, setDoc, serverTimestamp, updateDoc, collection, getDocs, query, orderBy } from "firebase/firestore";
 import { db } from "./firebase";
+import { toast } from "sonner";
 
 /**
  * 楽天APIのデータをバックグラウンドで保存する
@@ -30,7 +31,7 @@ export async function saveBookToDb(item: any) {
   }
 }
 /**
- * 【解説】
+ *
  * addToMyShelf: ログイン中のユーザー専用の本棚（サブコレクション）に保存します。
  * 階層：users(コレ) > {userId}(ドキュ) > myShelf(サブコレ) > {isbn}(ドキュ)
  */
@@ -49,6 +50,8 @@ export async function addToMyShelf(userId: string, item: any, score?: number, co
     status: "readed", // 読書状態（未読/既読など）の初期値 unread
     score: score || 0,       // 点数（未入力なら0）
     comment: comment || "",  // 感想（未入力なら空文字）
+    caption: item.itemCaption || "",
+    itemUrl: item.itemUrl,
   };
 
   try {
@@ -57,16 +60,17 @@ export async function addToMyShelf(userId: string, item: any, score?: number, co
     console.log("マイ本棚に登録完了！");
   } catch (e) {
     console.error("マイ本棚保存失敗:", e);
+    toast.error("本棚に登録失敗")
     throw e; // エラーを呼び出し元に伝えてalertなどを出せるようにする
   }
 }
 
 
-// 例: 指定したユーザーの本棚を全件取得する
+//  指定したユーザーの本棚を全件取得する
 export const getMyShelf = async (userId: string) => {
   const shelfRef = collection(db, "users", userId, "myShelf");
 
-  // せっかくなら「追加した順」に並べたいですよね
+  // 「追加した順」に並べたい
   const q = query(shelfRef, orderBy("addedAt", "desc"));
 
   const querySnapshot = await getDocs(q);
@@ -90,6 +94,7 @@ export const updateBookStatus = async (
     });
   } catch (e) {
     console.error("更新失敗:", e);
+    toast.error("登録失敗")
     throw e;
   }
 };

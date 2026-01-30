@@ -3,11 +3,13 @@ import { SearchBooks } from "@/lib/SearchBooks ";
 import { AuthButton } from "@/components/ui/AuthButton";
 import WallShelfBooks from "@/components/ui/Shelf";
 import { SearchBooksR } from "@/lib/searchBooksRakuten";
+import { auth } from "@/lib/firebase";
 import Link from "next/link";
 
 
 
 export default async function Home() {
+  const user = auth.currentUser
 
   // const data = await SearchBooks("伊坂幸太郎")
   // if(!data) return
@@ -15,7 +17,7 @@ export default async function Home() {
 
 
   return (
-    <div >
+    <div className="p-2">
       <AuthButton />
       {/* <ul>
         {data.items?.map((book) => (
@@ -32,13 +34,9 @@ export default async function Home() {
       </ul>
       <WallShelfBooks data={data} /> */}
 
-      <div className="flex justify-center items-center w-full mx-auto text-center my-2 gap-3">
-        <Link href="/search" className="text-blue-500 underline hover:text-blue-700">検索ページ</Link>
-        <Link href="/myShelf" className="text-blue-500 underline hover:text-blue-700">My本棚</Link>
-      </div>
 
+    <GeminiInput />
 
-      <GeminiInput />
 
     </div>
   );

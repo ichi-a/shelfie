@@ -5,6 +5,7 @@ import { auth } from "@/lib/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { getMyShelf } from "@/lib/booksDb";
 import Link from "next/link";
+import { toast } from "sonner";
 
 export default function MyShelf() {
   // 1. 取得した本を入れるための「箱（State）」を用意する
@@ -22,6 +23,7 @@ export default function MyShelf() {
           setBooks(data);
         } catch (error) {
           console.error("データ取得エラー:", error);
+          toast.error("エラーが発生しました")
         } finally {
           setLoading(false);
         }
@@ -38,21 +40,21 @@ export default function MyShelf() {
   if (loading) return <p className="text-center mt-10">読み込み中...</p>;
 
   return (<>
-    <div className="flex gap-2 justify-center">
-      <Link href="/" className="text-blue-500 underline hover:text-blue-700">HOME</Link>
-      <Link href="/search" className="text-blue-500 underline hover:text-blue-700">検索</Link>
-    </div>
     <div className="p-5">
       <h1 className="text-2xl font-bold mb-6">マイ本棚</h1>
 
       {books.length === 0 ? (
         <p>まだ本棚に本がありません。</p>
       ) : (
-        <div className="max-w-7xl mx-auto bg-amber-700 p-3">
+        <div className="max-w-7xl mx-auto bg-amber-100 p-3 relative">
           <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 xl:grid-cols-8 gap-2 justify-center items-center mx-auto w-full">
             {books.map((book) => (
               <div key={book.isbn} className="rounded w-28 h-40 overflow-hidden mx-auto mb-2"
               onClick={() =>setSelectedBook(book)}>
+                {book.score > 0 ? (
+                  <p className="text-center">⭐️{book.score}</p>) : (<p>未読</p>)
+                }
+
                 <img
                   src={book.largeImageUrl}
                   alt={book.title}
@@ -63,10 +65,21 @@ export default function MyShelf() {
           </div>
           {/* モーダル */}
           {selectedBook && (
-          <div className="fixed shadow-2xl">
-            <h3>{selectedBook.title}</h3>
-            <button onClick={() => setSelectedBook(null)}>close</button>
-          </div>
+            <div className="fixed flex items-center justify-center inset-0 bg-black/30 backdrop-blur-xs" onClick={() => setSelectedBook(null)}>
+              <div className="shadow-2xl bg-white max-w-2/3 p-5 rounded-lg" onClick={(e) => e.stopPropagation()}>
+                <h3 className="font-bold text-center mb-2">{selectedBook.title}</h3>
+                <p className="text-center mb-3">{selectedBook.author}</p>
+                {selectedBook.caption && (<>
+                <div className="w-full overflow-y-scroll max-h-2/3 border border-gray-300 p-2">
+                  <p className="leading-7">{selectedBook.caption}</p>
+                </div>
+                </>)}
+                {selectedBook.itemUrl && (<Link target="blank" href={selectedBook.itemUrl}>詳細</Link>)}
+
+                <button onClick={() => setSelectedBook(null)}
+                className="rounded-lg text-white w-22 mx-auto bg-blue-400 hover:bg-blue-500 my-3">close</button>
+              </div>
+            </div>
           )}
         </div>
         )}

@@ -2,6 +2,7 @@
 
 import { auth } from "@/lib/firebase";
 import { saveBookToDb, addToMyShelf } from "@/lib/booksDb";
+import { toast } from "sonner";
 
 // 【解説】Propsとして「book」を受け取れるようにします
 interface Props {
@@ -15,16 +16,17 @@ export const AddShelfButton = ({ book }: Props) => {
     const user = auth.currentUser;
 
     if (!user) {
-      alert("ログインしてね！");
+      toast.info("ログインしてください");
       return;
     }
 
     try {
       await saveBookToDb(book);
       await addToMyShelf(user.uid, book);
-      alert(`『${book.title}』を追加したよ！`);
+      toast.success(`『${book.title}』を追加したよ！`);
     } catch (error) {
-      alert("保存に失敗しました" + error);
+      console.error("保存に失敗しました" + error);
+      toast.error("保存に失敗しました")
     }
   };
 

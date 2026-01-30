@@ -1,4 +1,5 @@
 import { GoogleGenerativeAI, SchemaType} from "@google/generative-ai";
+import { toast } from "sonner";
 
 /**
  * ユーザーの本棚情報を元におすすめを3つ提案してもらう関数
@@ -12,7 +13,7 @@ export async function getBookRecommendations(books: any[]) {
     return "APIキーの設定エラーです。";
   }
 
-  // 2. 関数の中でインスタンス化する（これによってTop-levelでのエラーを防ぐ）
+  // 関数の中でインスタンス化する（これによってTop-levelでのエラーを防ぐ）
   const genAI = new GoogleGenerativeAI(apiKey);
 
   // モデルの初期化 (Gemini 2.5 Flash)
@@ -50,23 +51,20 @@ const model = genAI.getGenerativeModel({
   const prompt = `
     あなたはプロの書評家であり、読書コンシェルジュです。
     以下のユーザーの本棚（読んだ本のリスト）を分析して、このユーザーの好みや傾向を特定してください。
-    その上で、ユーザーの好みに基づいて、ユーザーがまだ読んだことのない、次に読むべきおすすめの本を具体的に1つ提案してください。
+    その上で、ユーザーの好みに基づいて、ユーザーがまだ読んだことのない、次に読むべきおすすめの本を具体的に1冊提案してください。
     提案する本は日本国内で発売されているものだけにしてください。
     その本をおすすめする理由も説明してください。
-    さらに次点でおすすめの本を二冊提案してください。
-    その二冊を進める理由も短く簡易的に説明してください。
-
+    評価が0の場合は未読の本です。
 
     【ユーザーの本棚データ】
     ${bookshelfData}
 
     【出力ルール】
     1. 各提案には「タイトル」「著者」「なぜおすすめか（理由）」を含めること。
-    2. 「タイトル」にはタイトル以外書かないこと。副題をつけないこと。
-    3. 「著者」には著者の名前以外は書かないこと。
-    4. 提案する本3つのうち1つの提案は、少しだけ異なる角度（ジャンルや作家）から選ぶこと。
-    5. 日本語で親しみやすい口調で回答してください。
-    6. 出力は500文字以内に収めてください。
+    2. bookTitleにはタイトル以外書かないこと。副題をつけないこと。
+    3. authorには著者の名前以外は書かないこと。
+    4. 日本語で親しみやすい口調で回答してください。
+    5. 出力は500文字以内に収めてください。
   `;
 
   try {
@@ -75,6 +73,7 @@ const model = genAI.getGenerativeModel({
     return response.text();
   } catch (error) {
     console.error("Gemini API Error:", error);
+    toast.error("エラーが発生しました")
     return null;
   }
 }

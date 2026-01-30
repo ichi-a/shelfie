@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react"; // useEffectを追加
-import { auth } from "@/lib/firebase"; // authをインポート
+import { useState, useEffect } from "react";
+import { auth } from "@/lib/firebase";
 import { onAuthStateChanged } from "firebase/auth"; // 監視用
 import { getBookRecommendations } from "@/lib/geminiApi";
 // import { SearchBooks } from "./SearchBooks ";
@@ -9,6 +9,7 @@ import { SearchBooksRgemini } from "@/lib/searchBooksRakuten";
 import { LoadingAnime } from "./ui/LoadingAnime";
 import { saveBookToDb, getMyShelf } from "@/lib/booksDb";
 import { AddShelfButton } from "./ui/AddShelfButton";
+import { toast } from "sonner";
 
 export const GeminiInput = () => {
   // recommendation: AIからのテキスト回答
@@ -16,20 +17,26 @@ export const GeminiInput = () => {
   const [recommendation, setRecommendation] = useState<any>(null);
   const [bookDetails, setBookDetails] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-
-  // 【解説】実データを保持するState
+  const [nowUser, setNowUser] = useState(false);
+  // 実データを保持するState
   const [userBooks, setUserBooks] = useState<any[]>([]);
 
-  // 【解説】画面読み込み時（またはログイン時）に本棚データを取得
+  // 画面読み込み時（またはログイン時）に本棚データを取得
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         const data = await getMyShelf(user.uid);
         setUserBooks(data);
+        setNowUser(true)
+      }
+      if(!user) {
+        setNowUser(false)
       }
     });
     return () => unsubscribe();
   }, []);
+
+
 
   const handleAiAdvice = async () => {
     if (userBooks.length === 0) {
@@ -45,7 +52,7 @@ export const GeminiInput = () => {
       // 1. まずGeminiから提案をもらう
       const aiResult = await getBookRecommendations(userBooks);
       if(!aiResult) {
-        alert("現在混みあっています。時間を置いて再度お試しください。")
+        toast.error("現在混みあっています。時間を置いて再度お試しください。")
         return
       }
       const parsedData = JSON.parse(aiResult);
@@ -79,6 +86,7 @@ export const GeminiInput = () => {
       }
     } catch (error) {
       console.error(error);
+      toast.error("エラーが発生しました")
     } finally {
       setIsLoading(false);
     }
@@ -86,7 +94,8 @@ export const GeminiInput = () => {
 
   return (
     <div className="mb-44 w-full mx-auto text-center rounded-xl border border-gray-500 px-5 py-10">
-      <p>マイ本棚をもとにおすすめを提案してもらう</p>
+    {nowUser && (<>
+        <p>マイ本棚をもとにおすすめを提案してもらう</p>
       <h3>AIおすすめ提案テスト</h3>
 
       <button
@@ -96,6 +105,9 @@ export const GeminiInput = () => {
       >
         {isLoading ? "分析中..." : "次の一冊を提案してもらう"}
       </button>
+    </>)}
+
+
 
       <div className="border-b border-b-gray-300 my-3" />
       {isLoading && !recommendation && (
@@ -122,7 +134,7 @@ export const GeminiInput = () => {
               <img
                 src={book.largeImageUrl}
                 alt={book.title}
-                className="object-cover rounded w-full h-full shadow-lg border border-gray-200 "
+                className="object-center object-cover rounded w-full h-full shadow-lg border border-gray-200 "
               />
             ) : (
               <div className="w-full h-32 bg-gray-200 flex items-center justify-center text-xs">本が見つかりません</div>

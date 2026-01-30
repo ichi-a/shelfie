@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { auth } from "@/lib/firebase";
 import { saveBookToDb, addToMyShelf } from "@/lib/booksDb";
+import { toast } from "sonner";
 
 export const AddShelfWithReview = ({ book }: { book: any }) => {
   const [score, setScore] = useState(3);
@@ -10,16 +11,17 @@ export const AddShelfWithReview = ({ book }: { book: any }) => {
 
   const handleSave = async () => {
     const user = auth.currentUser;
-    if (!user) return alert("ログインしてね");
+    if (!user) return toast.info("ログインしてください");
 
     try {
       await saveBookToDb(book);
       // スコアとコメントを渡して保存！
       await addToMyShelf(user.uid, book, score, comment);
-      alert("評価付きで保存したよ！");
+      toast.success("本棚に追加しました！");
       setShowForm(false);
     } catch (e) {
-      alert("エラー");
+      console.error("エラー",e);
+      toast.error("エラーが発生しました")
     }
   };
 
