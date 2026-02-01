@@ -1,11 +1,12 @@
-import { doc, setDoc, serverTimestamp, updateDoc, collection, getDocs, query, orderBy } from "firebase/firestore";
+import { doc, setDoc, serverTimestamp,deleteDoc, updateDoc, collection, getDocs, query, orderBy } from "firebase/firestore";
 import { db } from "./firebase";
 import { toast } from "sonner";
+import { Book } from "@/types/book";
 
 /**
  * 楽天APIのデータをバックグラウンドで保存する
  */
-export async function saveBookToDb(item: any) {
+export async function saveBookToDb(item: Book) {
   if (!item || !item.isbn) return;
 
   const bookRef = doc(db, "books", item.isbn);
@@ -21,6 +22,9 @@ export async function saveBookToDb(item: any) {
     salesDate: item.salesDate || "",
     affiliateUrl: item.affiliateUrl || "",
     updatedAt: serverTimestamp(),
+    booksGenreId: item.booksGenreId,
+    reviewAverage: item.reviewAverage,
+    reviewCount: item.reviewCount,
   };
 
   try {
@@ -35,7 +39,13 @@ export async function saveBookToDb(item: any) {
  * addToMyShelf: ログイン中のユーザー専用の本棚（サブコレクション）に保存します。
  * 階層：users(コレ) > {userId}(ドキュ) > myShelf(サブコレ) > {isbn}(ドキュ)
  */
-export async function addToMyShelf(userId: string, item: any, score?: number, comment?: string) {
+export async function addToMyShelf(
+  userId: string,
+  item: Book,
+  score?: number,
+  comment?: string,
+  status: "readed" | "unread" = "unread"
+  ) {
   if (!userId || !item.isbn) return;
 
   // ユーザーごとの専用パスを作成
@@ -47,11 +57,16 @@ export async function addToMyShelf(userId: string, item: any, score?: number, co
     author: item.author,
     largeImageUrl: item.largeImageUrl,
     addedAt: serverTimestamp(), // 本棚に追加した日時
-    status: "readed", // 読書状態（未読/既読など）の初期値 unread
+    status: status, // 読書状態（未読/既読など）の初期値 unread
     score: score || 0,       // 点数（未入力なら0）
     comment: comment || "",  // 感想（未入力なら空文字）
     caption: item.itemCaption || "",
     itemUrl: item.itemUrl,
+    publisherName: item.publisherName,
+    salesDate: item.salesDate,
+    booksGenreId: item.booksGenreId,
+    reviewAverage: item.reviewAverage,
+    reviewCount: item.reviewCount,
   };
 
   try {
@@ -67,7 +82,7 @@ export async function addToMyShelf(userId: string, item: any, score?: number, co
 
 
 //  指定したユーザーの本棚を全件取得する
-export const getMyShelf = async (userId: string) => {
+export const getMyShelf = async (userId: string): Promise<Book[]> => {
   const shelfRef = collection(db, "users", userId, "myShelf");
 
   // 「追加した順」に並べたい
@@ -76,14 +91,14 @@ export const getMyShelf = async (userId: string) => {
   const querySnapshot = await getDocs(q);
 
   // Snapshotを普通の配列に変換して返す
-  return querySnapshot.docs.map(doc => doc.data());
+  return querySnapshot.docs.map(doc => ({...doc.data()} as Book));
 };
 
 
 export const updateBookStatus = async (
   userId: string,
   isbn: string,
-  updates: { status: string; score?: number; comment?: string }
+  updates: { score?: number | null | undefined; comment?: string; status?: "readed" | "unread" }
 ) => {
   const shelfRef = doc(db, "users", userId, "myShelf", isbn);
 
@@ -94,7 +109,13 @@ export const updateBookStatus = async (
     });
   } catch (e) {
     console.error("更新失敗:", e);
-    toast.error("登録失敗")
+    toast.error("更新失敗")
     throw e;
   }
+};
+
+// 本を削除する
+export const deleteBookFromDb = async (userId: string, isbn: string) => {
+  const bookRef = doc(db, "users", userId, "myShelf", isbn);
+  return await deleteDoc(bookRef);
 };

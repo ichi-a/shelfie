@@ -3,87 +3,159 @@
 import { useEffect, useState } from "react";
 import { auth } from "@/lib/firebase";
 import { onAuthStateChanged } from "firebase/auth";
-import { getMyShelf } from "@/lib/booksDb";
-import Link from "next/link";
+import { getMyShelf, updateBookStatus, deleteBookFromDb } from "@/lib/booksDb";
 import { toast } from "sonner";
+import { BookDetailModal } from "@/components/ui/BookDetailModal";
+import { Book, BookStatus } from "@/types/book";
 
 export default function MyShelf() {
-  // 1. 取得した本を入れるための「箱（State）」を用意する
-  const [books, setBooks] = useState<any[]>([]);
+  // --- 状態管理 (State) ---
+  const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedBook, setSelectedBook] = useState(null)
+  const [selectedBook, setSelectedBook] = useState<Book | null>(null);
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [editScore, setEditScore] = useState(0);
+  const [editComment, setEditComment] = useState("");
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+
+  // --- データ取得ロジック ---
+  const fetchBooks = async (uid: string) => {
+    try {
+      const data = await getMyShelf(uid);
+      setBooks(data);
+    } catch (error) {
+      toast.error("データの取得に失敗しました");
+      console.error(error)
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    // 2. ログイン状態を監視して、ユーザーが確定してからデータを取る
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        try {
-          // 3. 自作した getMyShelf 関数を使ってデータを取得
-          const data = await getMyShelf(user.uid);
-          setBooks(data);
-        } catch (error) {
-          console.error("データ取得エラー:", error);
-          toast.error("エラーが発生しました")
-        } finally {
-          setLoading(false);
-        }
-      } else {
-        // ログインしていない場合
-        setLoading(false);
-      }
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) fetchBooks(user.uid);
+      else setLoading(false);
     });
-
     return () => unsubscribe();
   }, []);
 
-  // 4. 画面に表示する部分
-  if (loading) return <p className="text-center mt-10">読み込み中...</p>;
+  // --- ハンドラ ---
+  const openModal = (book: Book) => {
+    setSelectedBook(book);
+    setEditScore(book.score || 0);
+    setEditComment(book.comment || "");
+    setIsEditing(false);
+  };
 
-  return (<>
-    <div className="p-5">
-      <h1 className="text-2xl font-bold mb-6">マイ本棚</h1>
+  const handleUpdate = async () => {
+    const user = auth.currentUser;
+    if (!user || !selectedBook) return;
 
-      {books.length === 0 ? (
-        <p>まだ本棚に本がありません。</p>
-      ) : (
-        <div className="max-w-7xl mx-auto bg-amber-100 p-3 relative">
-          <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 xl:grid-cols-8 gap-2 justify-center items-center mx-auto w-full">
-            {books.map((book) => (
-              <div key={book.isbn} className="rounded w-28 h-40 overflow-hidden mx-auto mb-2"
-              onClick={() =>setSelectedBook(book)}>
-                {book.score > 0 ? (
-                  <p className="text-center">⭐️{book.score}</p>) : (<p>未読</p>)
-                }
+    // 未読にするなら status="unread" かつ コメント空、そうでなければ "readed"
+    const isSettingToUnread = editScore === 0;
+    const newStatus: BookStatus  = (isSettingToUnread ? "unread" : "readed");
+    const newComment = isSettingToUnread ? "" : editComment;
 
-                <img
-                  src={book.largeImageUrl}
-                  alt={book.title}
-                  className="w-full h-auto shadow object-cover"
-                />
+    try {
+      await updateBookStatus(user.uid, selectedBook.isbn, {
+        score: editScore,
+        comment: newComment,
+        status: newStatus,
+      });
+
+      // ローカルStateの即時書き換え
+      const updatedList: Book[] = books.map(b =>
+        b.isbn === selectedBook.isbn
+          ? { ...b, score: editScore, comment: newComment, status: newStatus }
+          : b
+      );
+      setBooks(updatedList);
+
+      toast.success(isSettingToUnread ? "Reading listに移動しました" : "更新しました");
+
+      // 更新が終わったらモーダルを閉じる
+      setIsEditing(false);
+      setSelectedBook(null);
+    } catch (e) {
+      toast.error("更新失敗");
+      console.error(e)
+    }
+  };
+
+  const handleDelete = async () => {
+    const user = auth.currentUser;
+    if (!user || !selectedBook) return;
+    try {
+      await deleteBookFromDb(user.uid, selectedBook.isbn);
+      setBooks(books.filter(b => b.isbn !== selectedBook.isbn));
+      setSelectedBook(null);
+      setShowDeleteConfirm(false);
+      toast.success(`${selectedBook.title}を本棚から削除しました`)
+    } catch (e) {
+      toast.error("削除失敗");
+      console.error(e)
+    }
+  };
+
+  // セクション分け判定
+  const readBooks = books.filter(b => b.status === "readed" || (b.score && b.score > 0));
+  const unreadBooks = books.filter(b => b.status === "unread" || (!b.status && (!b.score || b.score === 0)));
+
+  if (loading) return <div className="min-h-screen bg-[#F5F3EF] flex items-center justify-center"><div className="animate-spin h-8 w-8 border-4 border-[#C89B3C] border-t-transparent rounded-full" /></div>;
+
+  return (
+    <main className="min-h-screen bg-[#F5F3EF] text-[#1F4D4F] pb-20 pt-12">
+      <div className="container mx-auto p-5">
+        <header className="text-center mb-16">
+          <h1 className="text-3xl font-serif font-bold mb-2">My Library</h1>
+          <div className="h-1 w-12 bg-[#C89B3C] mx-auto" />
+        </header>
+
+        <div className="max-w-7xl mx-auto space-y-16">
+          {readBooks.length > 0 && (
+            <section>
+              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-6">
+                {readBooks.map(book => (
+                  <div key={book.isbn} onClick={() => openModal(book)} className="relative cursor-pointer group">
+                    <img src={book.largeImageUrl} className="shadow-md group-hover:-translate-y-1 transition-transform border border-black/5" />
+                    <div className="absolute top-0 right-0 bg-[#C89B3C] text-white text-[9px] px-1 font-bold">★{book.score}</div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-          {/* モーダル */}
-          {selectedBook && (
-            <div className="fixed flex items-center justify-center inset-0 bg-black/30 backdrop-blur-xs" onClick={() => setSelectedBook(null)}>
-              <div className="shadow-2xl bg-white max-w-2/3 p-5 rounded-lg" onClick={(e) => e.stopPropagation()}>
-                <h3 className="font-bold text-center mb-2">{selectedBook.title}</h3>
-                <p className="text-center mb-3">{selectedBook.author}</p>
-                {selectedBook.caption && (<>
-                <div className="w-full overflow-y-scroll max-h-2/3 border border-gray-300 p-2">
-                  <p className="leading-7">{selectedBook.caption}</p>
-                </div>
-                </>)}
-                {selectedBook.itemUrl && (<Link target="blank" href={selectedBook.itemUrl}>詳細</Link>)}
+            </section>
+          )}
 
-                <button onClick={() => setSelectedBook(null)}
-                className="rounded-lg text-white w-22 mx-auto bg-blue-400 hover:bg-blue-500 my-3">close</button>
+          {unreadBooks.length > 0 && (
+            <section>
+              <h2 className="border-b-2 border-[#C89B3C] w-32 pb-1 mb-3 text-[#1F4D4F] font-serif font-bold">Reading list</h2>
+              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-6">
+                {unreadBooks.map(book => (
+                  <div key={book.isbn} onClick={() => openModal(book)} className="cursor-pointer group">
+                    <img src={book.largeImageUrl} className="shadow-md group-hover:-translate-y-1 transition-transform border border-black/5" />
+                  </div>
+                ))}
               </div>
-            </div>
+            </section>
           )}
         </div>
-        )}
-      </div>
 
-  </>);
+        <BookDetailModal
+          mode="shelf"
+          selectedBook={selectedBook}
+          onClose={() => setSelectedBook(null)}
+          isEditing={isEditing}
+          setIsEditing={setIsEditing}
+          editScore={editScore}
+          setEditScore={setEditScore}
+          editComment={editComment}
+          setEditComment={setEditComment}
+          onUpdate={handleUpdate}
+          showDeleteConfirm={showDeleteConfirm}
+          setShowDeleteConfirm={setShowDeleteConfirm}
+          onDelete={handleDelete}
+        />
+      </div>
+    </main>
+  );
 }

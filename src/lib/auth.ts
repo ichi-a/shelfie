@@ -32,7 +32,7 @@ export const loginWithGoogle = async () => {
 export const logout = async () => {
   try {
     await signOut(auth);
-    toast.info("ログアウトしました");
+    toast("ログアウトしました");
   } catch (error) {
     console.error("ログアウトエラー:", error);
     toast.error("ログアウトエラー")

@@ -3,40 +3,31 @@
 import { auth } from "@/lib/firebase";
 import { saveBookToDb, addToMyShelf } from "@/lib/booksDb";
 import { toast } from "sonner";
+import { Book } from "@/types/book";
 
-// 【解説】Propsとして「book」を受け取れるようにします
-interface Props {
-  book: any;
-}
-
-export const AddShelfButton = ({ book }: Props) => {
-
-  // 【解説】実際の保存処理（クリックされた時に動く関数）
+// AddShelfButton (AI提案用 - シンプル)
+export const AddShelfButton = ({ book, onClose }:{book: Book, onClose: () => void}) => {
   const handleAddShelf = async () => {
     const user = auth.currentUser;
-
-    if (!user) {
-      toast.info("ログインしてください");
-      return;
-    }
-
+    if (!user) return toast.info("ログインしてください");
     try {
       await saveBookToDb(book);
-      await addToMyShelf(user.uid, book);
-      toast.success(`『${book.title}』を追加したよ！`);
+      // 第5引数に "unread" を渡す
+      await addToMyShelf(user.uid, book, 0, "", "unread");
+      onClose();
+      toast.success(`『${book.title}』をReading listに追加しました`);
     } catch (error) {
-      console.error("保存に失敗しました" + error);
-      toast.error("保存に失敗しました")
+      toast.error("保存失敗");
+      console.error(error);
     }
   };
 
-  // 【解説】見た目だけを return する
   return (
     <button
       onClick={handleAddShelf}
-      className="mt-1 px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded text-sm transition-colors"
+      className="w-full bg-[#C89B3C] text-white py-2 text-xs font-bold tracking-widest uppercase hover:bg-[#b08834] transition-colors rounded-sm shadow-md"
     >
-      本棚に追加
+      本棚に追加する
     </button>
   );
 };

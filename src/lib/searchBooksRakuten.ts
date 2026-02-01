@@ -1,23 +1,24 @@
+export async function SearchBooksR(query: string) {
+  const queryQ = encodeURIComponent(query);
 
+  // 自分のAPI (/api/search) にリクエスト。元のパラメータはそのまま維持。
+  const res = await fetch(
+    `/api/search?type=Total&keyword=${queryQ}&hits=10&booksGenreId=001004&sort=sales&formatVersion=2`
+  );
 
-export async function SearchBooksR (query) {
-
-  const queryQ = encodeURIComponent(query)
-
-    const res = await fetch(`https://app.rakuten.co.jp/services/api/BooksTotal/Search/20170404?applicationId=${process.env.NEXT_PUBLIC_RAKUTEN_API_KEY}&keyword=${queryQ}&hits=10&booksGenreId=001004&sort=sales&formatVersion=2`)
-    if(!res.ok) {
-      throw new Error("本が見つかりません")
-    }
-    return res.json()
+  if (!res.ok) throw new Error("本が見つかりません");
+  return res.json();
 }
-export async function SearchBooksRgemini (title, author) {
 
-  const titleQ = encodeURIComponent(title)
-  const authorQ = encodeURIComponent(author)
+export async function SearchBooksRgemini(title: string, author: string) {
+  const titleQ = encodeURIComponent(title);
+  const authorQ = encodeURIComponent(author);
 
-    const res = await fetch(`https://app.rakuten.co.jp/services/api/BooksBook/Search/20170404?applicationId=${process.env.NEXT_PUBLIC_RAKUTEN_API_KEY}&title=${titleQ}&author=${authorQ}&hits=1&formatVersion=2`)
-    if(!res.ok) {
-      throw new Error("本が見つかりません")
-    }
-    return res.json()
+  // 自分のAPI (/api/search) にリクエスト。元のパラメータはそのまま維持。
+  const res = await fetch(
+    `/api/search?type=Book&title=${titleQ}&author=${authorQ}&hits=1&formatVersion=2`
+  );
+
+  if (!res.ok) throw new Error("本が見つかりません");
+  return res.json();
 }
