@@ -3,6 +3,7 @@ import "./globals.css";
 import { Footer } from "@/components/layout/Footer";
 import { Toaster } from "@/components/ui/sonner";
 
+<meta name="apple-mobile-web-app-title" content="Shelfie" />
 
 
 export const metadata: Metadata = {
