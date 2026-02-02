@@ -5,6 +5,7 @@ import { AddShelfWithReview } from "./AddShelfWithReview";
 import { AddShelfButton } from "./AddShelfButton";
 import { Book, ModalMode } from "@/types/book";
 import { useEffect } from "react";
+import { Timestamp } from "firebase/firestore";
 
 interface BookDetailModalProps {
   selectedBook: Book | null;
@@ -12,7 +13,7 @@ interface BookDetailModalProps {
   // モード指定: 'shelf' (本棚) または 'search' (AI検索/追加用)
   mode: ModalMode
 
-  // --- shelfモードのProps ---
+
   isEditing?: boolean;
   setIsEditing?: (val: boolean) => void;
   editScore?: number;
@@ -74,24 +75,41 @@ export const BookDetailModal = ({
       >
 
         {/* --- 左カラム：画像と削除ボタン --- */}
-        <div className="w-full md:w-2/5 h-68 md:h-auto bg-white p-2 md:p-8 flex flex-col items-center border-r border-[#1F4D4F]/10 ">
-          <div className="w-full h-auto max-w-45 mx-auto">
-            <img
-              src={selectedBook.largeImageUrl}
-              className="object-cover shadow-xl text-center mx-auto"
-              alt={selectedBook.title}
-            />
-          </div>
-          {/* 本棚モードの時だけ削除ボタンを表示 */}
-          {mode === 'shelf' && (
-            <button
-              onClick={() => setShowDeleteConfirm?.(true)}
-              className=" mb-2 mt-5 md:mt-15 text-sm text-red-400 font-bold hover:text-red-600 transition-colors"
-            >
-              本棚から削除する
-            </button>
-          )}
-        </div>
+<div className="w-full md:w-2/5 h-auto bg-white p-2 md:p-8 flex flex-col items-center border-r border-[#1F4D4F]/10">
+  <div className="w-full h-auto max-w-45 mx-auto">
+    <img
+      src={selectedBook.largeImageUrl}
+      className="object-cover shadow-2xl mx-auto rounded-sm"
+      alt={selectedBook.title}
+    />
+  </div>
+
+  {/* 登録日：バッジ風にして情報の格を上げる */}
+  <div className="mt-6 flex flex-col items-center gap-1">
+    <span className="text-[10px] uppercase tracking-widest text-[#1F4D4F]/40 font-bold">Added on</span>
+    <p className="text-sm text-[#1F4D4F]/80 font-medium">
+      {selectedBook.addedAt instanceof Timestamp
+        ? selectedBook.addedAt.toDate().toLocaleDateString("ja-JP")
+        : selectedBook.addedAt instanceof Date
+          ? selectedBook.addedAt.toLocaleDateString("ja-JP")
+          : selectedBook.addedAt
+      }
+    </p>
+  </div>
+
+  {/* 削除ボタン：md:mt-20を活かしつつ、下部に重心を置く */}
+  <div className="mt-auto pt-10 w-full flex flex-col items-center">
+    {mode === 'shelf' && (
+      <button
+        onClick={() => setShowDeleteConfirm?.(true)}
+        className="group relative flex items-center gap-2 py-2 px-4 text-xs text-red-400/80 hover:text-red-600 transition-all duration-300"
+      >
+        {/* ゴミ箱アイコン的な装飾をテキストの前に */}
+        <span className="font-bold tracking-wider">本棚から削除する</span>
+      </button>
+    )}
+  </div>
+</div>
 
         {/* --- 削除確認ダイアログ（本棚モード時のみ条件付きレンダリング） --- */}
         {mode === 'shelf' && showDeleteConfirm && (
@@ -172,6 +190,7 @@ export const BookDetailModal = ({
                     onKeyDown={(e) => {
                       // Enter単体で押されたときだけ保存
                       if (e.key === 'Enter' && !e.shiftKey) {
+                        if (e.nativeEvent.isComposing) return
                         e.preventDefault(); // 改行を防ぐ
                         onUpdate?.();       // 保存処理を実行
                         (e.target as HTMLElement).blur(); // キーボードを閉じる

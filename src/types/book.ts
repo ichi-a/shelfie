@@ -1,3 +1,4 @@
+import { Timestamp } from "firebase/firestore";
 
 export type BookStatus = "readed" | "unread";
 
@@ -19,7 +20,7 @@ export interface Book {
   booksGenreId?: string
   reviewAverage?: string
   reviewCount?: string
-  addedAt?: string
+  addedAt?: string | Timestamp | Date
   status?: BookStatus
 }
 

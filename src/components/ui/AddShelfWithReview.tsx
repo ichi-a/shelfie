@@ -33,7 +33,7 @@ export const AddShelfWithReview = ({ book, onClose }:{book: Book, onClose: () =>
       // 決まった status を第5引数に渡す
       await addToMyShelf(user.uid, book, score, comment, status);
 
-      toast.success(status === "readed" ? "本棚に追加しました" : "Reading listに追加しました");
+      toast.success(status === "readed" ? `本棚に『${book.title}』を追加しました` : "Reading listに追加しました");
       setShowForm(false);
       onClose();
     } catch (e) {
@@ -93,6 +93,7 @@ export const AddShelfWithReview = ({ book, onClose }:{book: Book, onClose: () =>
           value={comment}
           onChange={(e) => setComment(e.target.value)}
           onKeyDown={(e) => {
+            if (e.nativeEvent.isComposing) return
             if (e.key === 'Enter' && !e.shiftKey) {
               e.preventDefault();
               handleSave?.();

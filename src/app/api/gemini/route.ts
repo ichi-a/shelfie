@@ -16,7 +16,7 @@ export async function POST(req: Request) {
     // --- ここから下は、あなたが提示した元のコードをそのまま移植 ---
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.5-flash-Lite",
+      model: "gemini-2.5-flash",
       generationConfig: {
         responseMimeType: "application/json",
         responseSchema: {
