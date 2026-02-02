@@ -86,7 +86,7 @@ export const BookDetailModal = ({
 
   {/* 登録日：バッジ風にして情報の格を上げる */}
   <div className="mt-6 flex flex-col items-center gap-1">
-    <span className="text-[10px] uppercase tracking-widest text-[#1F4D4F]/40 font-bold">Added on</span>
+    <span className="text-[10px] tracking-widest text-[#1F4D4F]/40 font-bold">Added on</span>
     <p className="text-sm text-[#1F4D4F]/80 font-medium">
       {selectedBook.addedAt instanceof Timestamp
         ? selectedBook.addedAt.toDate().toLocaleDateString("ja-JP")
@@ -102,10 +102,10 @@ export const BookDetailModal = ({
     {mode === 'shelf' && (
       <button
         onClick={() => setShowDeleteConfirm?.(true)}
-        className="group relative flex items-center gap-2 py-2 px-4 text-xs text-red-400/80 hover:text-red-600 transition-all duration-300"
+        className="font-bold tracking-wider flex items-center gap-2 py-2 px-4 text-xs text-red-400/80 hover:text-red-600 transition-all duration-300"
       >
-        {/* ゴミ箱アイコン的な装飾をテキストの前に */}
-        <span className="font-bold tracking-wider">本棚から削除する</span>
+
+        本棚から削除する
       </button>
     )}
   </div>
