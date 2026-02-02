@@ -1,0 +1,249 @@
+'use client';
+
+import Link from "next/link";
+import { AddShelfWithReview } from "./AddShelfWithReview";
+import { AddShelfButton } from "./AddShelfButton";
+import { Book, ModalMode } from "@/types/book";
+import { useEffect } from "react";
+
+interface BookDetailModalProps {
+  selectedBook: Book | null;
+  onClose: () => void;
+  // モード指定: 'shelf' (本棚) または 'search' (AI検索/追加用)
+  mode: ModalMode
+
+  // --- shelfモードのProps ---
+  isEditing?: boolean;
+  setIsEditing?: (val: boolean) => void;
+  editScore?: number;
+  setEditScore?: (val: number) => void;
+  editComment?: string;
+  setEditComment?: (val: string) => void;
+  onUpdate?: () => void;
+  showDeleteConfirm?: boolean;
+  setShowDeleteConfirm?: (val: boolean) => void;
+  onDelete?: () => void;
+}
+
+export const BookDetailModal = ({
+  selectedBook,
+  onClose,
+  mode,
+  isEditing = false,
+  setIsEditing,
+  editScore = 0,
+  setEditScore,
+  editComment = "",
+  setEditComment,
+  onUpdate,
+  showDeleteConfirm = false,
+  setShowDeleteConfirm,
+  onDelete,
+}: BookDetailModalProps) => {
+
+    useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault()
+        onClose()
+        setShowDeleteConfirm?.(false)
+      }
+    }
+    window.addEventListener('keydown', handler);
+    return () => {
+      window.removeEventListener('keydown', handler);
+    }
+  },[onClose])
+
+  if (!selectedBook) return null;
+
+  const description = selectedBook.caption || selectedBook.itemCaption;
+
+
+
+  return (
+    // --- モーダル全体を覆うオーバーレイ ---
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/30 backdrop-blur-sm transition-all animate-in fade-in"
+      onClick={onClose}
+    >
+      {/* --- モーダル本体 --- */}
+      <div
+        className="bg-[#F5F3EF] max-w-2xl max-h-11/12 w-full rounded-sm overflow-hidden flex flex-col md:flex-row shadow-2xl animate-in zoom-in duration-200"
+        onClick={e => e.stopPropagation()}
+      >
+
+        {/* --- 左カラム：画像と削除ボタン --- */}
+        <div className="w-full md:w-2/5 h-68 md:h-auto bg-white p-2 md:p-8 flex flex-col items-center border-r border-[#1F4D4F]/10 ">
+          <div className="w-full h-auto max-w-45 mx-auto">
+            <img
+              src={selectedBook.largeImageUrl}
+              className="object-cover shadow-xl text-center mx-auto"
+              alt={selectedBook.title}
+            />
+          </div>
+          {/* 本棚モードの時だけ削除ボタンを表示 */}
+          {mode === 'shelf' && (
+            <button
+              onClick={() => setShowDeleteConfirm?.(true)}
+              className=" mb-2 mt-5 md:mt-15 text-sm text-red-400 font-bold hover:text-red-600 transition-colors"
+            >
+              本棚から削除する
+            </button>
+          )}
+        </div>
+
+        {/* --- 削除確認ダイアログ（本棚モード時のみ条件付きレンダリング） --- */}
+        {mode === 'shelf' && showDeleteConfirm && (
+          <div className="fixed inset-0 z-60 flex items-center justify-center p-4 bg-[#1F4D4F]/40 backdrop-blur-[2px] animate-in fade-in"
+            onClick={() => setShowDeleteConfirm?.(false)}
+          >
+            <div className="bg-white p-6 shadow-2xl max-w-sm w-full text-center space-y-4">
+              <p className="font-bold text-[#1F4D4F]">本当にこの本を削除しますか？</p>
+              <div className="flex gap-3 mt-6">
+                <button
+                  onClick={onDelete}
+                  className="flex-1 bg-red-500 text-white py-2 text-xs font-bold uppercase tracking-widest hover:bg-red-600"
+                >
+                  削除する
+                </button>
+                <button
+                  onClick={() => setShowDeleteConfirm?.(false)}
+                  className="flex-1 border border-gray-200 py-2 text-xs font-bold uppercase tracking-widest hover:text-[#C89B3C]"
+                >
+                  やめる
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* --- 右カラム：書籍情報とアクション --- */}
+        <div className="w-full md:w-3/5 p-8 flex flex-col max-h-[85vh] overflow-y-auto">
+          {/* タイトル・著者 */}
+          <div className="mb-4">
+            <h3 className="text-2xl font-bold leading-tight mb-1">{selectedBook.title}</h3>
+            <p className="text-[#C89B3C] font-medium text-sm">{selectedBook.author}</p>
+          </div>
+
+          {/* あらすじ（あれば表示） */}
+          {description && !isEditing && (
+            <div className="text-sm leading-relaxed text-[#1F4D4F]/80 mb-6 italic border-l-2 border-[#1F4D4F]/10 pl-4">
+              <p className="line-clamp-8 leading-6 tracking-wide">{description}</p>
+            </div>
+          )}
+
+          {/* 自分のレビュー（本棚モードかつ非編集時のみ表示） */}
+          {mode === 'shelf' && !isEditing && selectedBook.comment && selectedBook.score && (
+            <div className="mb-6 p-4 bg-[#C89B3C]/10 rounded-sm">
+              <p className="text-[10px] font-bold text-[#C89B3C] mb-1">My Note</p>
+              <p className="text-sm">★{selectedBook.score} - {selectedBook.comment}</p>
+            </div>
+          )}
+
+          <div className="mt-auto space-y-4">
+            {/* --- アクションエリア --- */}
+            {mode === 'shelf' && isEditing ? (
+              // 【本棚モード：編集フォーム】
+              <div className="p-4 border border-[#C89B3C]/30 bg-white rounded-sm space-y-4">
+                <div>
+                  {editScore >= 1 && (<label className="text-sm font-bold block mb-2 uppercase opacity-60">SCORE: {editScore}</label>)}
+                  {editScore === 0 && (<label className="text-sm font-bold block mb-2 uppercase opacity-60 text-[#1F4D4F]">未読</label>)}
+
+                  <div className="flex gap-1 text-2xl cursor-pointer">
+                    {[1, 2, 3, 4, 5].map((num) => (
+                      <button
+                        key={num}
+                        onClick={() => setEditScore?.(num)}
+                        className={`${num <= (editScore || 0) ? "text-[#C89B3C]" : "text-gray-200"}`}
+                      >
+                        ★
+                      </button>
+                    ))}
+                    <button onClick={() => setEditScore?.(0)} className="text-sm text-gray-400 ml-2 hover:underline">未読にする</button>
+                  </div>
+                </div>
+                <div>
+                  <label className="text-[10px] font-bold block mb-1 opacity-60">COMMENT</label>
+                  {editScore > 0 && (
+                  <textarea
+                    value={editComment}
+                    onChange={e => setEditComment?.(e.target.value)}
+                    onKeyDown={(e) => {
+                      // Enter単体で押されたときだけ保存
+                      if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault(); // 改行を防ぐ
+                        onUpdate?.();       // 保存処理を実行
+                        (e.target as HTMLElement).blur(); // キーボードを閉じる
+                      }
+                    }}
+                    className="w-full border border-gray-200 text-sm p-2 h-16 bg-gray-50 resize-none"
+                    maxLength={48}
+                  />
+                  )
+
+                  }
+
+                </div>
+                <div className="flex gap-2">
+                  <button onClick={onUpdate} className="flex-1 bg-[#1F4D4F] text-white py-2 text-[10px] font-bold uppercase tracking-widest hover:bg-[#1F4D4F]/80">保存</button>
+                  <button onClick={() => setIsEditing?.(false)} className="flex-1 border border-gray-200 py-2 text-[10px] font-bold uppercase tracking-widest hover:text-[#C89B3C]">キャンセル</button>
+                </div>
+              </div>
+            ) : (
+              // 【通常表示のボタンエリア】
+              <div className="flex flex-col gap-3">
+                {mode === 'shelf' ? (
+                  // 本棚モードのボタン：編集・閉じる
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setIsEditing?.(true)}
+                      className="flex-1 bg-[#C89B3C] text-white py-3 text-[12px] font-bold tracking-widest hover:opacity-90"
+                    >
+                      {selectedBook.status === "readed" || (selectedBook.score || 0) > 0
+                        ? "内容を編集する"
+                        : "既読にする"
+                      }
+                    </button>
+                    <button
+                      onClick={onClose}
+                      className="px-6 py-3 border border-[#1F4D4F]/20 text-[10px] font-bold rounded tracking-widest hover:text-[#C89B3C] transition-colors"
+                    >
+                      閉じる
+                    </button>
+                  </div>
+                ) : (
+                  // 検索・AIモードのボタン・閉じる
+                  <div className="flex flex-col gap-2">
+                    <div className="w-full mx-auto text-center">
+                      {mode === 'search' && (<AddShelfWithReview book={selectedBook} onClose={onClose} /> )}
+                      {mode === 'ai' && (<AddShelfButton book={selectedBook} onClose={onClose}/>)}
+
+                    </div>
+                    <button
+                      onClick={onClose}
+                      className="w-full py-2 text-[12px] font-bold text-[#1F4D4F]/40 hover:text-[#1F4D4F] uppercase tracking-widest transition-colors"
+                    >
+                      閉じる
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* 外部詳細リンク */}
+            {selectedBook.itemUrl && !isEditing && (
+              <Link
+                target="blank"
+                href={selectedBook.itemUrl}
+                className="block text-center text-[10px] font-bold text-[#1F4D4F]/40 hover:text-[#1F4D4F] transition-colors tracking-[0.2em]"
+              >
+                詳細(外部ページ) ↗
+              </Link>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
