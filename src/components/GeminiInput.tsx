@@ -81,7 +81,7 @@ export const GeminiInput = () => {
             <p className="font-serif italic text-[#1F4D4F]/70">あなたの本棚を分析します</p>
             <h3 className="text-xl font-serif font-bold text-[#1F4D4F]">司書AIによる提案</h3>
           </div>
-<LoadingAnime />
+
           <button
             onClick={handleAiAdvice}
             disabled={isLoading}
@@ -95,13 +95,13 @@ export const GeminiInput = () => {
       {isLoading && !recommendation && (
         <div className="w-full mx-auto text-center mt-10 space-y-4">
           <p className="animate-pulse text-[#1F4D4F]/60 font-serif italic">司書があなたの本棚を分析しています...</p>
-
+        <LoadingAnime />
         </div>
       )}
 
       {recommendation && (
         // 枠
-        <div className="mt-15 mx-auto bg-[#F5F3EF] max-w-5xl max-h-11/12 w-full rounded-sm overflow-hidden flex flex-col md:flex-row shadow-2xl animate-in zoom-in duration-200">
+        <div className="mt-15 mx-auto bg-[#F5F3EF] max-w-200 max-h-11/12 w-full rounded-sm overflow-hidden flex flex-col md:flex-row shadow-2xl animate-in zoom-in duration-200">
 
           {/* 左カラム */}
           <div className="w-full md:w-2/5 h-auto bg-white p-2 md:p-8 flex flex-col items-center border-r border-[#1F4D4F]/10">
@@ -135,7 +135,9 @@ export const GeminiInput = () => {
         {/* 右カラム */}
         <div className="md:w-3/5 flex flex-col max-h-[85vh] overflow-y-auto p-6 w-full mx-auto max-w-3xl text-left">
             <p className="font-serif font-bold my-3 text-[#C89B3C] tracking-widest text-xs uppercase">Message from Librarian</p>
-            <p className="p-3 leading-relaxed text-[#1F4D4F] font-medium border-l-4 border-[#C89B3C]">{recommendation.librarianSummary}</p>
+            <div className="mt-5 w-full h-full">
+              <p className="p-3 leading-relaxed text-[#1F4D4F] font-medium border-l-4 border-[#C89B3C]">{recommendation.librarianSummary}</p>
+            </div>
           </div>
           <BookDetailModal
                 mode="ai"
