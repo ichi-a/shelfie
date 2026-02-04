@@ -21,6 +21,8 @@ export default function MyShelf() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [sortType, setSortType] = useState<Sort>("addedAt");
 
+
+
   // --- データ取得ロジック ---
   const fetchBooks = async (uid: string) => {
     try {
@@ -116,6 +118,9 @@ export default function MyShelf() {
 
   if (loading) return <div className="min-h-screen bg-[#F5F3EF] flex items-center justify-center"><div className="animate-spin h-8 w-8 border-4 border-[#C89B3C] border-t-transparent rounded-full" /></div>;
 
+
+
+
   return (
     <main className="min-h-screen bg-[#F5F3EF] text-[#1F4D4F] pb-20 pt-12">
       <div className="container mx-auto p-5">
@@ -128,7 +133,7 @@ export default function MyShelf() {
           {readBooks.length > 0 && (
             <section>
                   <div>
-                    <div className="flex gap-3 mb-2 text-[#1F4D4F] text-sm p-1 font-semibold transition-all">
+                    <div className="flex gap-3 italic mb-2 text-[#1F4D4F] text-sm p-1 font-semibold transition-all">
                       <div className={`p-1 cursor-pointer ${sortType === "addedAt" && "border-b-2  border-[#C89B3C]"}`} onClick={() => setSortType("addedAt")}>
                         登録日順</div>
                       <div className={`p-1 cursor-pointer ${sortType === "author" && "border-b-2  border-[#C89B3C]"}`} onClick={() => setSortType("author")}>
@@ -139,14 +144,16 @@ export default function MyShelf() {
                         評価順</div>
                     </div>
                   </div>
-              <div className="grid grid-cols-2 min-[480px]:grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-6">
+              <div className="grid grid-cols-2 min-[480px]:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-6">
                 {readBooks.map(book => (
-                  <div key={book.isbn} onClick={() => openModal(book)} className="relative cursor-pointer group rounded mx-auto aspect-2/3">
+                  <div key={book.isbn} onClick={() => openModal(book)} className="relative m-3 z-1 cursor-pointer group rounded mx-auto min-w-33 min-h-49.5 shadow-xl">
                     {/* {sortType === "author" && (<div className="line-clamp-1 rounded bg-black/40 text-white text-[9px] px-1 font-bold">{book.author}</div>)} */}
-                    <img src={book.largeImageUrl} className="w-full h-full shadow-md group-hover:-translate-y-1 transition-transform object-cover"/>
+                    <img src={book.largeImageUrl} className="w-full h-full group-hover:-translate-y-1 transition-transform object-cover"/>
                     {sortType === "score" && (<div className="absolute top-0 right-0 bg-[#C89B3C] text-white text-[9px] px-1 font-bold">★{book.score}</div>)}
                     {sortType === "salesDate" && (<div className="absolute top-0 right-0 line-clamp-1 rounded bg-black/30 text-white text-[9px] px-1 font-bold">{book.salesDate}</div>)}
-                    {sortType === "author" && (<div className="text-center line-clamp-1 rounded bg-black/40 text-white text-[9px] px-1 font-bold">{book.author}</div>)}
+                    {sortType === "author" && (<div className="text-center line-clamp-1 rounded text-[#1F4D4F] text-[9px] px-1 mt-2 font-bold">{book.author}</div>)}
+                    {/* 本を置いてる感 */}
+                    {/* <div className="-z-10 h-1.5 absolute -right-4 -left-4 bg-amber-800"></div> */}
                   </div>
 
                 ))}
@@ -167,6 +174,7 @@ export default function MyShelf() {
             </section>
           )}
         </div>
+        {}
 
         <BookDetailModal
           mode="shelf"

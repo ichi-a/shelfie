@@ -54,6 +54,11 @@ export const AddShelfWithReview = ({ book, onClose }:{book: Book, onClose: () =>
       </button>
     );
   }
+  //未読を押すとコメント消したい
+  const unreadBtn = () => {
+    setScore(0)
+    setComment("")
+  }
 
   return (
     <div className="border border-[#1F4D4F]/20 p-4 mt-2 text-left bg-[#F5F3EF] shadow-inner rounded-sm space-y-4 animate-in fade-in slide-in-from-top-1 duration-200">
@@ -79,7 +84,7 @@ export const AddShelfWithReview = ({ book, onClose }:{book: Book, onClose: () =>
           ))}
           <button
             type="button"
-            onClick={() => setScore(0)}
+            onClick={unreadBtn}
             className="text-sm text-[#1F4D4F]/40 ml-auto hover:text-[#1F4D4F] underline"
           >
             未読
@@ -89,7 +94,7 @@ export const AddShelfWithReview = ({ book, onClose }:{book: Book, onClose: () =>
 
       <div>
         <label className="text-[10px] font-bold tracking-wider opacity-60 block mb-1">My Note</label>
-        <textarea
+        {score > 0 && (<textarea
           value={comment}
           onChange={(e) => setComment(e.target.value)}
           onKeyDown={(e) => {
@@ -103,8 +108,9 @@ export const AddShelfWithReview = ({ book, onClose }:{book: Book, onClose: () =>
           className="w-full border border-[#1F4D4F]/10 text-sm p-2 h-20 resize-none bg-white focus:outline-[#C89B3C] focus:ring-1 focus:ring-[#C89B3C] transition-all"
           maxLength={48}
           placeholder="この本の感想を一言で表すと？"
-        />
-        <p className="text-[9px] text-right opacity-40 mt-1">{comment.length} / 48</p>
+        />)}
+
+        <p className="text-[9px] text-right opacity-40 mt-1">{comment?.length} / 48</p>
       </div>
 
       <div className="flex gap-2">
