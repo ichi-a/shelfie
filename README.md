@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Shelfie
+ユーザーの本棚から好みや傾向を分析し次に読む本を提案するアプリ
 
-## Getting Started
+## Demo: Vercel
+URL
 
-First, run the development server:
+## Source: Github
+URL
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## アプリ概要
+- 本アプリは、読書記録をもとにAIが次に読む本を提案する読書支援アプリです
+- 本棚管理、検索機能に加え、ユーザーの評価やコメントを分析したレコメンド機能を備えています
+- 読書記録を保存するだけでなく、そのデータを活用して「次に読む本」との出会いに繋げることを目的としています
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 主な機能
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 本棚管理機能
+- 読んだ本、読みたい本の登録
+- 読んだ本にはスコア(5段階)とコメントを記録可能
+- 登録した本の一覧表示・並び替え
+- 詳細モーダルから編集・削除・読了状態の切り替え
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 検索機能
+- キーワードによる書籍検索(楽天BooksAPI使用)
+- 検索結果から即座に本棚へ登録可能
+- 既読、未読を選択して登録できる設計
 
-## Learn More
+### AI提案機能
+- 本棚に登録された本の評価・コメントをもとにユーザーの好みを分析
+- 個人に最適化された「次に読む一冊」を提案
+- 提案された本はそのまま詳細表示・本棚追加が可能
 
-To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 画面構成
+本アプリは３ページ構成でシンプルな導線設計にしています。
+- トップ
+　　AIによるおすすめ表示ページ
+- 検索
+　　キーワード検索ページ
+- 本棚
+　　登録済み書籍の一覧ページ
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+ユーザーが迷わずに直感的に操作ができるよう意識しました
 
-## Deploy on Vercel
+## こだわったポイント
+本アプリでは「機能の多さ」よりも使いやすさと操作ストレスの少なさを重視しています。
+- レスポンシブ対応によるスマホ・PC両対応
+- Enterでスムーズに本棚へ追加
+- Escapeでモーダルを閉じられる操作設計
+- スマホ操作時にUXを損わないよう、Enter入力後にフォーカスが外れる操作設計
+- モーダル中心のUIでページ遷移を最小限に抑制
+- AIによる提案の待機ストレス軽減のためのローディングアニメーション
+細かい部分ですが「直感的に使える」体験を目指してUI/UXを設計しています
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# 改善点
+現在、記事を開く際に
+- モーダル用データ取得
+- 直接アクセス用データ取得
+の2回APIリクエストが発生する構造になっています。
+そのため約0.4秒程度の待ち時間があります。
+UX低下を防ぐためスケルトンローディングを実装していますが
+今後はデータ取得の共通化・キャッシュ最適化による改善を検討しています。
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
