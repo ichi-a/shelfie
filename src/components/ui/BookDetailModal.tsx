@@ -5,6 +5,7 @@ import { AddShelfWithReview } from "./AddShelfWithReview";
 import { AddShelfButton } from "./AddShelfButton";
 import { Book, ModalMode } from "@/types/book";
 import { useEffect } from "react";
+import { Timestamp } from "firebase/firestore";
 
 interface BookDetailModalProps {
   selectedBook: Book | null;
@@ -12,7 +13,7 @@ interface BookDetailModalProps {
   // モード指定: 'shelf' (本棚) または 'search' (AI検索/追加用)
   mode: ModalMode
 
-  // --- shelfモードのProps ---
+
   isEditing?: boolean;
   setIsEditing?: (val: boolean) => void;
   editScore?: number;
@@ -40,6 +41,14 @@ export const BookDetailModal = ({
   setShowDeleteConfirm,
   onDelete,
 }: BookDetailModalProps) => {
+
+  useEffect(() => {
+    if (selectedBook) {
+      document.body.classList.add("overflow-hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden")
+    }
+  }, [selectedBook])
 
     useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -74,30 +83,50 @@ export const BookDetailModal = ({
       >
 
         {/* --- 左カラム：画像と削除ボタン --- */}
-        <div className="w-full md:w-2/5 h-68 md:h-auto bg-white p-2 md:p-8 flex flex-col items-center border-r border-[#1F4D4F]/10 ">
+        <div className="w-full md:w-2/5 h-auto bg-white p-2 md:p-8 flex flex-col items-center border-r border-[#1F4D4F]/10">
           <div className="w-full h-auto max-w-45 mx-auto">
             <img
               src={selectedBook.largeImageUrl}
-              className="object-cover shadow-xl text-center mx-auto"
+              className="object-cover shadow-2xl mx-auto rounded-sm"
               alt={selectedBook.title}
             />
           </div>
-          {/* 本棚モードの時だけ削除ボタンを表示 */}
-          {mode === 'shelf' && (
-            <button
-              onClick={() => setShowDeleteConfirm?.(true)}
-              className=" mb-2 mt-5 md:mt-15 text-sm text-red-400 font-bold hover:text-red-600 transition-colors"
-            >
-              本棚から削除する
-            </button>
+
+            {/* 登録日 */}
+          {selectedBook.addedAt && (
+          <div className="mt-6 flex flex-col items-center gap-1">
+            <span className="text-[10px] tracking-widest text-[#1F4D4F]/40 font-bold">本棚に追加した日</span>
+            <p className="text-sm text-[#1F4D4F]/80 font-medium">
+              {selectedBook.addedAt instanceof Timestamp
+                ? selectedBook.addedAt.toDate().toLocaleDateString("ja-JP")
+                : selectedBook.addedAt instanceof Date
+                  ? selectedBook.addedAt.toLocaleDateString("ja-JP")
+                  : selectedBook.addedAt
+              }
+            </p>
+          </div>
           )}
+
+
+          {/* 削除ボタン */}
+          <div className="mt-auto pt-10 w-full flex flex-col items-center">
+            {mode === 'shelf' && (
+              <button
+                onClick={() => setShowDeleteConfirm?.(true)}
+                className="font-bold tracking-wider flex items-center gap-2 py-2 px-4 text-xs text-red-400/80 hover:text-red-600 transition-all duration-300"
+              >
+
+                <p>本棚から削除する</p>
+              </button>
+            )}
+          </div>
         </div>
 
         {/* --- 削除確認ダイアログ（本棚モード時のみ条件付きレンダリング） --- */}
         {mode === 'shelf' && showDeleteConfirm && (
           <div className="fixed inset-0 z-60 flex items-center justify-center p-4 bg-[#1F4D4F]/40 backdrop-blur-[2px] animate-in fade-in"
             onClick={() => setShowDeleteConfirm?.(false)}
-          >
+            >
             <div className="bg-white p-6 shadow-2xl max-w-sm w-full text-center space-y-4">
               <p className="font-bold text-[#1F4D4F]">本当にこの本を削除しますか？</p>
               <div className="flex gap-3 mt-6">
@@ -172,12 +201,13 @@ export const BookDetailModal = ({
                     onKeyDown={(e) => {
                       // Enter単体で押されたときだけ保存
                       if (e.key === 'Enter' && !e.shiftKey) {
+                        if (e.nativeEvent.isComposing) return
                         e.preventDefault(); // 改行を防ぐ
                         onUpdate?.();       // 保存処理を実行
                         (e.target as HTMLElement).blur(); // キーボードを閉じる
                       }
                     }}
-                    className="w-full border border-gray-200 text-sm p-2 h-16 bg-gray-50 resize-none"
+                    className="w-full border border-[#1F4D4F]/10 text-sm p-2 h-20 resize-none bg-white focus:outline-[#C89B3C] focus:ring-1 focus:ring-[#C89B3C] transition-all"
                     maxLength={48}
                   />
                   )

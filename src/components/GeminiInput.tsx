@@ -49,13 +49,13 @@ export const GeminiInput = () => {
         return
       }
       const parsedData = JSON.parse(aiResult);
-      console.log(parsedData)//-----------------------------------------------------
+      console.log("parsedData",parsedData)//-----------------------------------------------------
       setRecommendation(parsedData);
 
       if (parsedData.recommendedBooks) {
         for (const book of parsedData.recommendedBooks) {
           const searchData = await SearchBooksRgemini(book.bookTitle, book.author);
-          console.log(searchData)//-------------------------------------
+          console.log("searchData",searchData)//-------------------------------------
           const foundBook = searchData?.Items?.[0];
           if (foundBook) {
             setBookDetails((prev) => [...prev, foundBook]);
@@ -71,10 +71,10 @@ export const GeminiInput = () => {
       setIsLoading(false);
     }
   };
-  console.log(recommendation)
+  console.log("recommendation",recommendation)
 
   return (
-    <div className="mb-44 w-full mx-auto text-center rounded-sm border border-[#1F4D4F]/10 bg-white/30 px-5 py-12 shadow-inner">
+    <div className="max-w-350 mt-10 mb-44 w-full mx-auto text-center rounded-sm border border-[#1F4D4F]/10 bg-white/30 px-5 py-12 shadow-inner">
       {nowUser && (
         <div className="space-y-6">
           <div className="space-y-2">
@@ -95,83 +95,69 @@ export const GeminiInput = () => {
       {isLoading && !recommendation && (
         <div className="w-full mx-auto text-center mt-10 space-y-4">
           <p className="animate-pulse text-[#1F4D4F]/60 font-serif italic">司書があなたの本棚を分析しています...</p>
-          <LoadingAnime />
+        <LoadingAnime />
         </div>
       )}
 
       {recommendation && (
-        <div className="mt-10 bg-white border-l-4 border-[#C89B3C] p-6 w-full mx-auto rounded-sm max-w-3xl shadow-sm text-left">
-          <p className="font-serif font-bold mb-3 text-[#C89B3C] tracking-widest text-xs uppercase">Message from Librarian</p>
-          <p className="leading-relaxed text-[#1F4D4F] font-medium">{recommendation.librarianSummary}</p>
-        </div>
-      )}
+        // 枠
+        <div className="mt-15 mx-auto bg-[#F5F3EF] max-w-200 max-h-11/12 w-full rounded-sm overflow-hidden flex flex-col md:flex-row shadow-2xl animate-in zoom-in duration-200">
 
-      <div className="mt-12 max-w-5xl mx-auto">
-
-              {bookDetails.map((item, index) => (
-              <div
-                key={index} onClick={() => setSelectedBook(item)}
-                className="w-60 mx-auto group flex flex-col ">
-                {/* 画像枠 - アスペクト比 */}
+          {/* 左カラム */}
+          <div className="mx-auto w-full h-auto md:w-2/5 bg-white p-4 md:p-8 flex flex-col items-center border-r border-[#1F4D4F]/10">
+                {bookDetails[0] ? (
+                  <div>
+                    {bookDetails.map((item, index) => (
                 <div
-                  className="mx-auto relative aspect-2/3 overflow-hidden cursor-pointer w-2/3 shadow-sm hover:shadow-xl transition-all duration-300 transform border border-black/5">
-                  <img
-                    src={item.largeImageUrl}
-                    alt={item.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
-                  {/* ホバー時にオーバーレイ */}
-                  <div className="w-full absolute inset-0 bg-[#1F4D4F]/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <span className="bg-white/90 text-[#1F4D4F] text-xs font-bold py-1 px-3 rounded-full shadow-lg">詳細をみる</span>
+                  key={index} onClick={() => setSelectedBook(item)}
+                  className="w-full min-h-60 mx-auto group flex flex-col ">
+                  {/* 画像枠  */}
+                  <div
+                    className="mx-auto relative w-30 h-46 overflow-hidden cursor-pointer min-w-2/3 shadow-sm hover:shadow-xl transition-all duration-300 transform border border-black/5">
+                    <img
+                      src={item.largeImageUrl}
+                      alt={item.title}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+                    {/* ホバー時にオーバーレイ */}
+                    <div className="w-full absolute inset-0 bg-[#1F4D4F]/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <span className="bg-white/90 text-[#1F4D4F] text-xs font-bold py-1 px-3 rounded-full shadow-lg">詳細をみる</span>
+                    </div>
+                  </div>
+                  {/* 本のタイトル枠 */}
+                  <div className="p-1 md:p-3 mt-3 bg-white grow flex flex-col md:justify-between mx-auto">
+                    <p className="text-[#1F4D4F] text-xs font-bold line-clamp-1 text-center md:leading-snug mb-1 group-hover:text-[#C89B3C] transition-colors">
+                      {item.title}
+                    </p>
+                    <p className="text-[10px] text-[#1F4D4F]/70 text-center truncate line-clamp-1">{item.author}</p>
                   </div>
                 </div>
+              ))}
+                  </div>
+                ) : (
+                  <div className="bg-[#C89B3C]/20 w-full h-full p-5 leading-relaxed text-[#1F4D4F] font-medium text-sm">
+                    <p className="mt-5 md:mt-15">本が見つかりませんでした...司書は</p>
+                    <p>『{recommendation.recommendedBooks[0].bookTitle} /</p>
+                    <p>　{recommendation.recommendedBooks[0].author}』</p>
+                    <p>という本を勧めています。</p>
+                  </div>
+                )}
 
-                {/* 本のタイトル枠 */}
-                <div className="p-3 bg-white grow flex flex-col justify-between">
-                  <p className="text-xs font-bold line-clamp-2 leading-snug mb-1 group-hover:text-[#C89B3C] transition-colors">
-                    {item.title}
-                  </p>
-                  <p className="text-[10px] text-gray-500 truncate">{item.author}</p>
-                </div>
-              </div>
-            ))}
-            <BookDetailModal
-              mode="ai"
-              selectedBook={selectedBook}
-              onClose={() => setSelectedBook(null)}
-            />
-
-
-
-
-
-
-
-
-
-        {/* {bookDetails.map((book, i) => (
-          <div key={book.isbn || i} className="flex flex-col items-center animate-in fade-in slide-in-from-bottom-4 duration-700">
-            <div onClick={() => setSelectedBook(book)} className="relative mx-auto w-32 shadow-xl mb-4 transition-transform hover:-translate-y-1">
-              {book?.largeImageUrl ? (
-                <div>
-                  <img
-                    src={book.largeImageUrl}
-                    alt={book.title}
-                    className="w-full aspect-2/3 object-cover rounded-sm border border-[#1F4D4F]/10"
-                  />
-                </div>
-              ) : (
-                <div className="w-full h-40 bg-gray-200 flex items-center justify-center text-[10px]">No Image</div>
-              )}
-              <div className="absolute inset-0 bg-linear-to-t from-[#1F4D4F]/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-2">
-                <p className="text-[8px] text-white font-bold line-clamp-2">{book.title}</p>
-              </div>
+        </div>
+        {/* 右カラム */}
+        <div className="md:w-3/5 mt-8 flex flex-col max-h-[85vh] overflow-y-auto p-6 w-full mx-auto max-w-3xl text-left">
+            <p className="ml-3 font-serif font-bold my-3 text-[#C89B3C] tracking-widest text-xs uppercase">Message from Librarian</p>
+            <div className="mt-5 w-full h-full">
+              <p className="p-3 leading-relaxed text-[#1F4D4F] font-medium border-l-4 border-[#C89B3C]">{recommendation.librarianSummary}</p>
             </div>
-
           </div>
-        ))} */}
+          <BookDetailModal
+                mode="ai"
+                selectedBook={selectedBook}
+                onClose={() => setSelectedBook(null)}
+              />
       </div>
-
+      )}
     </div>
   );
 };

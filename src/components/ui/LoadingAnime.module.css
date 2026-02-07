@@ -8,17 +8,34 @@
 }
 .bookshelf {
   position: absolute;
-  left: 10px;
+  left: -26px;
   bottom: 10px;
   width: 100px;
   height: 100px;
 }
 .desk {
   position: absolute;
-  right: 10px;
+  right: -10px;
   bottom: 10px;
   width: 100px;
   height: 100px;
+}
+.aiRobo {
+  position: absolute;
+  left: 80px;
+  bottom: 0;
+  width: 100px;
+  height: 100px;
+  image-rendering: pixelated;
+}
+.eye {
+  position: absolute;
+  left: 80px;
+  bottom: 0;
+  width: 100px;
+  height: 100px;
+  z-index: 100;
+  animation: eyeMove 2s infinite;
 }
 .librarian {
   position: absolute;
@@ -29,27 +46,13 @@
   animation: walk 3s linear infinite,
     pop 0.5s linear infinite;
 }
-@keyframes walk {
-  0%{
-    left:80px;
-    content: url("/image/librarian_l.png");
-  }
-  5%{
-    left:80px;
-    content: url("/image/librarian_r.png");
-  }
-  50%{
-    left:110px;
-    content: url("/image/librarian_r.png");
-  }
-  55%{
-    left:110px;
-    content: url("/image/librarian_l.png");
-  }
-  100%{
-    left:80px;
-    content: url("/image/librarian_l.png");
-  }
+@keyframes eyeMove {
+  0%{transform: translateX(0);}
+  25%{transform: translateX(2px);}
+  50%{transform: translateX(0);}
+  75%{transform: translateX(-1px);}
+  100%{transform: translateX(0);}
+
 }
 @keyframes pop {
   0%,100%{

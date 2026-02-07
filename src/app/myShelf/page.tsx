@@ -9,15 +9,19 @@ import { BookDetailModal } from "@/components/ui/BookDetailModal";
 import { Book, BookStatus } from "@/types/book";
 
 export default function MyShelf() {
+
+  type Sort = "addedAt" | "author" | "salesDate" |"score";
   // --- 状態管理 (State) ---
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
-
   const [isEditing, setIsEditing] = useState(false);
   const [editScore, setEditScore] = useState(0);
   const [editComment, setEditComment] = useState("");
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [sortType, setSortType] = useState<Sort>("addedAt");
+
+  const user = auth.currentUser;
 
   // --- データ取得ロジック ---
   const fetchBooks = async (uid: string) => {
@@ -98,11 +102,24 @@ export default function MyShelf() {
     }
   };
 
+
+  //Sortロジック
+  const sortBooks = [...books].sort((a, b) => {
+    if (sortType === "author") return a.author.localeCompare(b.author)
+    if (sortType === "score") return (b.score ?? 0) - (a.score ?? 0)
+    if (sortType === "salesDate") return (b.salesDate ?? "").localeCompare(a.salesDate ?? "")
+    if (sortType === "addedAt") return 0
+    return 0
+  })
+
   // セクション分け判定
-  const readBooks = books.filter(b => b.status === "readed" || (b.score && b.score > 0));
+  const readBooks = sortBooks.filter(b => b.status === "readed" || (b.score && b.score > 0));
   const unreadBooks = books.filter(b => b.status === "unread" || (!b.status && (!b.score || b.score === 0)));
 
   if (loading) return <div className="min-h-screen bg-[#F5F3EF] flex items-center justify-center"><div className="animate-spin h-8 w-8 border-4 border-[#C89B3C] border-t-transparent rounded-full" /></div>;
+
+
+
 
   return (
     <main className="min-h-screen bg-[#F5F3EF] text-[#1F4D4F] pb-20 pt-12">
@@ -111,16 +128,34 @@ export default function MyShelf() {
           <h1 className="text-3xl font-serif font-bold mb-2">My Library</h1>
           <div className="h-1 w-12 bg-[#C89B3C] mx-auto" />
         </header>
-
+        { user ? (
         <div className="max-w-7xl mx-auto space-y-16">
           {readBooks.length > 0 && (
             <section>
-              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-6">
-                {readBooks.map(book => (
-                  <div key={book.isbn} onClick={() => openModal(book)} className="relative cursor-pointer group">
-                    <img src={book.largeImageUrl} className="shadow-md group-hover:-translate-y-1 transition-transform border border-black/5" />
-                    <div className="absolute top-0 right-0 bg-[#C89B3C] text-white text-[9px] px-1 font-bold">★{book.score}</div>
+                  <div>
+                    <div className="flex gap-3 italic mb-2 text-[#1F4D4F] text-sm p-1 font-semibold transition-all">
+                      <div className={`p-1 cursor-pointer ${sortType === "addedAt" && "border-b-2  border-[#C89B3C]"}`} onClick={() => setSortType("addedAt")}>
+                        登録日順</div>
+                      <div className={`p-1 cursor-pointer ${sortType === "author" && "border-b-2  border-[#C89B3C]"}`} onClick={() => setSortType("author")}>
+                        作者順</div>
+                      <div className={`p-1 cursor-pointer ${sortType === "salesDate" && "border-b-2  border-[#C89B3C]"}`} onClick={() => setSortType("salesDate")}>
+                        発売日順</div>
+                      <div className={`p-1 cursor-pointer ${sortType === "score" && "border-b-2  border-[#C89B3C]"}`} onClick={() => setSortType("score")}>
+                        評価順</div>
+                    </div>
                   </div>
+              <div className="grid grid-cols-2 min-[480px]:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-6">
+                {readBooks.map(book => (
+                  <div key={book.isbn} onClick={() => openModal(book)} className="relative m-3 z-1 cursor-pointer group rounded mx-auto min-w-33 min-h-49.5 shadow-xl">
+                    {/* {sortType === "author" && (<div className="line-clamp-1 rounded bg-black/40 text-white text-[9px] px-1 font-bold">{book.author}</div>)} */}
+                    <img src={book.largeImageUrl} className="w-full h-full group-hover:-translate-y-1 transition-transform object-cover"/>
+                    {sortType === "score" && (<div className="absolute top-0 right-0 bg-[#C89B3C] text-white text-[9px] px-1 font-bold">★{book.score}</div>)}
+                    {sortType === "salesDate" && (<div className="absolute top-0 right-0 line-clamp-1 rounded bg-black/30 text-white text-[9px] px-1 font-bold">{book.salesDate}</div>)}
+                    {sortType === "author" && (<div className="text-center line-clamp-1 rounded text-[#1F4D4F] text-[9px] px-1 mt-2 font-bold">{book.author}</div>)}
+                    {/* 本を置いてる感 */}
+                    {/* <div className="-z-10 h-1.5 absolute -right-4 -left-4 bg-amber-800"></div> */}
+                  </div>
+
                 ))}
               </div>
             </section>
@@ -139,6 +174,17 @@ export default function MyShelf() {
             </section>
           )}
         </div>
+        ): (
+          <div className="flex flex-col items-center justify-center min-h-[50vh] px-4 text-center mx-auto">
+            <h2 className="text-2xl font-bold text-[#1F4D4F] tracking-tight mb-3">
+              Welcome to <span className="text-[#C89B3C]">Shelfie</span>
+            </h2>
+            <p className="max-w-xs text-sm text-[#1F4D4F]/60 mb-10">
+              ログインしてShelfieを楽しんでください！
+            </p>
+          </div>
+        )}
+
 
         <BookDetailModal
           mode="shelf"

@@ -3,38 +3,49 @@ import {
   signInWithPopup,
   signOut
 } from "firebase/auth";
-import { auth } from "./firebase"; // 以前作成したfirebase.ts
+import { auth } from "./firebase";
 import { toast } from "sonner";
 
-// Googleログイン用のプロバイダー（設定）を作成
 const provider = new GoogleAuthProvider();
 
-/**
- * Googleログインを実行する関数
- */
 export const loginWithGoogle = async () => {
   try {
-    // ポップアップ画面でログインを実行
     const result = await signInWithPopup(auth, provider);
+    const idToken = await result.user.getIdToken();
+
+    // ★ 追加: サーバーにIDトークンを送ってCookieをセットする
+    const res = await fetch("/api/auth/session", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ idToken }),
+    });
+
+    if (!res.ok) throw new Error("セッション作成に失敗しました");
+
     console.log("ログイン成功:", result.user.displayName);
-    toast.success("ログインしました")
+    toast.success("ログインしました");
+
+    // 画面をリロードしてMiddlewareの制限を解除させる
+    window.location.reload();
     return result.user;
   } catch (error) {
     console.error("ログインエラー:", error);
-    toast.error("ログインエラー")
+    toast.error("ログインエラー");
     throw error;
   }
 };
 
-/**
- * ログアウトを実行する関数
- */
 export const logout = async () => {
   try {
     await signOut(auth);
+
+    // ★ 追加: サーバーのCookieを削除するAPIを叩く
+    await fetch("/api/auth/session", { method: "DELETE" });
+
     toast("ログアウトしました");
+    window.location.reload();
   } catch (error) {
     console.error("ログアウトエラー:", error);
-    toast.error("ログアウトエラー")
+    toast.error("ログアウトエラー");
   }
 };

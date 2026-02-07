@@ -12,8 +12,10 @@ export const AddShelfWithReview = ({ book, onClose }:{book: Book, onClose: () =>
   const [comment, setComment] = useState("");
   const [showForm, setShowForm] = useState(false);
 
+  const user = auth.currentUser;
+
   const handleSave = async () => {
-    const user = auth.currentUser;
+
     if (!user) return toast.error("ログインしてください");
 
     // スコアによって status を決める
@@ -31,20 +33,29 @@ export const AddShelfWithReview = ({ book, onClose }:{book: Book, onClose: () =>
     try {
       await saveBookToDb(book);
       // 決まった status を第5引数に渡す
-      await addToMyShelf(user.uid, book, score, comment, status);
+      await addToMyShelf( book, score, comment, status);
 
-      toast.success(status === "readed" ? "本棚に追加しました" : "Reading listに追加しました");
+      toast.success(status === "readed" ? `本棚に『${book.title}』を追加しました` : `Reading listに『${book.title}』を追加しました`);
       setShowForm(false);
       onClose();
     } catch (e) {
-      toast.error("エラーが発生しました");
+      toast.error("[保存失敗] エラーが発生しました");
       console.error(e);
     }
   };
 
-  // ... (JSX部分は変更なし)
+  if (!showForm && !user) {
+    return (
+      <button
+        onClick={() => toast.error("ログインしてください")}
+        className="w-full bg-[#C89B3C] text-white py-2 text-xs font-bold tracking-widest uppercase hover:bg-[#b08834] transition-colors rounded-sm shadow-md"
+      >
+        本棚に追加する
+      </button>
+    );
+  }
 
-  if (!showForm) {
+  if (!showForm && user) {
     return (
       <button
         onClick={() => setShowForm(true)}
@@ -53,6 +64,11 @@ export const AddShelfWithReview = ({ book, onClose }:{book: Book, onClose: () =>
         本棚に追加する
       </button>
     );
+  }
+  //未読を押すとコメント消したい
+  const unreadBtn = () => {
+    setScore(0)
+    setComment("")
   }
 
   return (
@@ -79,7 +95,7 @@ export const AddShelfWithReview = ({ book, onClose }:{book: Book, onClose: () =>
           ))}
           <button
             type="button"
-            onClick={() => setScore(0)}
+            onClick={unreadBtn}
             className="text-sm text-[#1F4D4F]/40 ml-auto hover:text-[#1F4D4F] underline"
           >
             未読
@@ -89,10 +105,11 @@ export const AddShelfWithReview = ({ book, onClose }:{book: Book, onClose: () =>
 
       <div>
         <label className="text-[10px] font-bold tracking-wider opacity-60 block mb-1">My Note</label>
-        <textarea
+        {score > 0 && (<textarea
           value={comment}
           onChange={(e) => setComment(e.target.value)}
           onKeyDown={(e) => {
+            if (e.nativeEvent.isComposing) return
             if (e.key === 'Enter' && !e.shiftKey) {
               e.preventDefault();
               handleSave?.();
@@ -102,8 +119,9 @@ export const AddShelfWithReview = ({ book, onClose }:{book: Book, onClose: () =>
           className="w-full border border-[#1F4D4F]/10 text-sm p-2 h-20 resize-none bg-white focus:outline-[#C89B3C] focus:ring-1 focus:ring-[#C89B3C] transition-all"
           maxLength={48}
           placeholder="この本の感想を一言で表すと？"
-        />
-        <p className="text-[9px] text-right opacity-40 mt-1">{comment.length} / 48</p>
+        />)}
+
+        <p className="text-[9px] text-right opacity-40 mt-1">{comment?.length} / 48</p>
       </div>
 
       <div className="flex gap-2">

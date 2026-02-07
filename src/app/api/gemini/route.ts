@@ -16,7 +16,7 @@ export async function POST(req: Request) {
     // --- ここから下は、あなたが提示した元のコードをそのまま移植 ---
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.5-flash-Lite",
+      model: "gemini-2.5-flash",
       generationConfig: {
         responseMimeType: "application/json",
         responseSchema: {
@@ -41,7 +41,7 @@ export async function POST(req: Request) {
     });
 
     const bookshelfData = books.map((b: Book) => {
-  const statusLabel = b.status === "readed" ? "【読了】" : "【積読/読みたい】";
+  const statusLabel = b.status === "readed" ? "【読了】" : "【Reading List/読みたい】";
 
   // b.score が undefined や null なら 0 を使う
   const scoreValue = b.score ?? 0;
@@ -69,6 +69,7 @@ ${bookshelfData}
 
 【制約事項】
 ・提案は日本国内で流通している実在の本1冊のみ。
+・日本国内で有名な本を提案してください。
 ・タイトルと著者名は正確に、余計な装飾（副題など）は省くこと。
 ・親しみやすく、かつ知的な口調で。
 ・全体で400文字以内。
@@ -76,7 +77,6 @@ ${bookshelfData}
 
     const result = await model.generateContent(prompt);
     const response = await result.response;
-    // --- ここまで ---
 
     return NextResponse.json(JSON.parse(response.text()));
   } catch (error) {

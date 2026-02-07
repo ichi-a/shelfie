@@ -17,7 +17,7 @@ export const AuthButton = () => {
 
   if (user) {
     return (
-      <div className="flex items-center gap-4 justify-end bg-white/50 p-2 rounded-full border border-[#1F4D4F]/10 mb-2">
+      <div className="max-w-350 mx-auto flex items-center gap-4 justify-end bg-white/50 p-2 rounded-full border border-[#1F4D4F]/10 mb-2">
         <div className="flex items-center gap-4 bg-white p-2 rounded-full border border-[#1F4D4F]/10">
           {user.photoURL && (
             <img src={user.photoURL} alt="" className="w-8 h-8 rounded-full border border-[#C89B3C]" />
