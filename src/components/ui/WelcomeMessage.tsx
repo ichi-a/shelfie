@@ -13,6 +13,7 @@ export const Welcome = () => {
     setUser(currentUser);
   });
 
+
   // クリーンアップ処理（リスナーを解除）
   return () => unsubscribe();
 }, []);

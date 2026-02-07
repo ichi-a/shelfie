@@ -41,7 +41,7 @@ export async function POST(req: Request) {
     });
 
     const bookshelfData = books.map((b: Book) => {
-  const statusLabel = b.status === "readed" ? "【読了】" : "【積読/読みたい】";
+  const statusLabel = b.status === "readed" ? "【読了】" : "【Reading List/読みたい】";
 
   // b.score が undefined や null なら 0 を使う
   const scoreValue = b.score ?? 0;
@@ -77,7 +77,6 @@ ${bookshelfData}
 
     const result = await model.generateContent(prompt);
     const response = await result.response;
-    // --- ここまで ---
 
     return NextResponse.json(JSON.parse(response.text()));
   } catch (error) {

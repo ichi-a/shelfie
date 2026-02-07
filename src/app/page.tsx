@@ -1,13 +1,14 @@
 import { GeminiInput } from "@/components/GeminiInput";
 import { AuthButton } from "@/components/ui/AuthButton";
 import { Welcome } from "@/components/ui/WelcomeMessage";
+import { Loading } from "@/components/ui/Load";
 
 export default async function Home() {
 
 
   return (
     <div className="p-2 pb-20 bg-[#F5F3EF]">
-
+      <Loading />
       <AuthButton />
       <Welcome />
       <GeminiInput />

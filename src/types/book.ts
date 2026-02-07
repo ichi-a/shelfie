@@ -22,6 +22,7 @@ export interface Book {
   reviewCount?: string
   addedAt?: string | Timestamp | Date
   status?: BookStatus
+  bookTitle?: string
 }
 
 

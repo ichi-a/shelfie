@@ -104,14 +104,16 @@ export const GeminiInput = () => {
         <div className="mt-15 mx-auto bg-[#F5F3EF] max-w-200 max-h-11/12 w-full rounded-sm overflow-hidden flex flex-col md:flex-row shadow-2xl animate-in zoom-in duration-200">
 
           {/* 左カラム */}
-          <div className="w-full md:w-2/5 h-auto bg-white p-2 md:p-8 flex flex-col items-center border-r border-[#1F4D4F]/10">
-                {bookDetails.map((item, index) => (
+          <div className="mx-auto w-full h-auto md:w-2/5 bg-white p-4 md:p-8 flex flex-col items-center border-r border-[#1F4D4F]/10">
+                {bookDetails[0] ? (
+                  <div>
+                    {bookDetails.map((item, index) => (
                 <div
                   key={index} onClick={() => setSelectedBook(item)}
                   className="w-full min-h-60 mx-auto group flex flex-col ">
-                  {/* 画像枠 - アスペクト比 */}
+                  {/* 画像枠  */}
                   <div
-                    className="mx-auto relative aspect-2/3 overflow-hidden cursor-pointer min-w-2/3 shadow-sm hover:shadow-xl transition-all duration-300 transform border border-black/5">
+                    className="mx-auto relative w-30 h-46 overflow-hidden cursor-pointer min-w-2/3 shadow-sm hover:shadow-xl transition-all duration-300 transform border border-black/5">
                     <img
                       src={item.largeImageUrl}
                       alt={item.title}
@@ -123,18 +125,28 @@ export const GeminiInput = () => {
                     </div>
                   </div>
                   {/* 本のタイトル枠 */}
-                  <div className="p-3 bg-white grow flex flex-col justify-between mx-auto">
-                    <p className="text-[#1F4D4F] text-xs font-bold line-clamp-1 text-center leading-snug mb-1 group-hover:text-[#C89B3C] transition-colors">
+                  <div className="p-1 md:p-3 mt-3 bg-white grow flex flex-col md:justify-between mx-auto">
+                    <p className="text-[#1F4D4F] text-xs font-bold line-clamp-1 text-center md:leading-snug mb-1 group-hover:text-[#C89B3C] transition-colors">
                       {item.title}
                     </p>
-                    <p className="text-[10px] text-[#1F4D4F]/70 text-center truncate">{item.author}</p>
+                    <p className="text-[10px] text-[#1F4D4F]/70 text-center truncate line-clamp-1">{item.author}</p>
                   </div>
                 </div>
               ))}
+                  </div>
+                ) : (
+                  <div className="bg-[#C89B3C]/20 w-full h-full p-5 leading-relaxed text-[#1F4D4F] font-medium text-sm">
+                    <p className="mt-5 md:mt-15">本が見つかりませんでした...司書は</p>
+                    <p>『{recommendation.recommendedBooks[0].bookTitle} /</p>
+                    <p>　{recommendation.recommendedBooks[0].author}』</p>
+                    <p>という本を勧めています。</p>
+                  </div>
+                )}
+
         </div>
         {/* 右カラム */}
-        <div className="md:w-3/5 flex flex-col max-h-[85vh] overflow-y-auto p-6 w-full mx-auto max-w-3xl text-left">
-            <p className="font-serif font-bold my-3 text-[#C89B3C] tracking-widest text-xs uppercase">Message from Librarian</p>
+        <div className="md:w-3/5 mt-8 flex flex-col max-h-[85vh] overflow-y-auto p-6 w-full mx-auto max-w-3xl text-left">
+            <p className="ml-3 font-serif font-bold my-3 text-[#C89B3C] tracking-widest text-xs uppercase">Message from Librarian</p>
             <div className="mt-5 w-full h-full">
               <p className="p-3 leading-relaxed text-[#1F4D4F] font-medium border-l-4 border-[#C89B3C]">{recommendation.librarianSummary}</p>
             </div>
