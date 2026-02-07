@@ -13,7 +13,7 @@ export const AddShelfButton = ({ book, onClose }:{book: Book, onClose: () => voi
     try {
       await saveBookToDb(book);
       // 第5引数に "unread" を渡す
-      await addToMyShelf(user.uid, book, 0, "", "unread");
+      await addToMyShelf( book, 0, "", "unread");
       onClose();
       toast.success(`『${book.title}』をReading listに追加しました`);
     } catch (error) {

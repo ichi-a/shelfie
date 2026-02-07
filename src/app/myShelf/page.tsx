@@ -21,7 +21,7 @@ export default function MyShelf() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [sortType, setSortType] = useState<Sort>("addedAt");
 
-
+  const user = auth.currentUser;
 
   // --- データ取得ロジック ---
   const fetchBooks = async (uid: string) => {
@@ -128,7 +128,7 @@ export default function MyShelf() {
           <h1 className="text-3xl font-serif font-bold mb-2">My Library</h1>
           <div className="h-1 w-12 bg-[#C89B3C] mx-auto" />
         </header>
-
+        { user ? (
         <div className="max-w-7xl mx-auto space-y-16">
           {readBooks.length > 0 && (
             <section>
@@ -174,7 +174,17 @@ export default function MyShelf() {
             </section>
           )}
         </div>
-        {}
+        ): (
+          <div className="flex flex-col items-center justify-center min-h-[50vh] px-4 text-center mx-auto">
+            <h2 className="text-2xl font-bold text-[#1F4D4F] tracking-tight mb-3">
+              Welcome to <span className="text-[#C89B3C]">Shelfie</span>
+            </h2>
+            <p className="max-w-xs text-sm text-[#1F4D4F]/60 mb-10">
+              ログインしてShelfieを楽しんでください！
+            </p>
+          </div>
+        )}
+
 
         <BookDetailModal
           mode="shelf"

@@ -5,12 +5,12 @@ import { getAnalytics, isSupported, Analytics } from "firebase/analytics"; // â˜
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: "shelfie-ee95c.firebaseapp.com",
-  projectId: "shelfie-ee95c",
-  storageBucket: "shelfie-ee95c.firebasestorage.app",
-  messagingSenderId: "88224647381",
-  appId: "1:88224647381:web:7ceb4b86af4829a85cfa5c",
-  measurementId: "G-7XF8JTWMMK"
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket:  process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENTID
 };
 
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();

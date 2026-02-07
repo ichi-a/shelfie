@@ -41,39 +41,19 @@ export async function saveBookToDb(item: Book) {
  * 階層：users(コレ) > {userId}(ドキュ) > myShelf(サブコレ) > {isbn}(ドキュ)
  */
 export async function addToMyShelf(
-  userId: string,
   item: Book,
   score?: number,
   comment?: string,
   status: "readed" | "unread" = "unread"
   ) {
-  if (!userId || !item.isbn) return;
-
-  // ユーザーごとの専用パスを作成
-  const shelfRef = doc(db, "users", userId, "myShelf", item.isbn);
-
-  const shelfData = {
-    isbn: item.isbn,
-    title: item.title,
-    author: item.author,
-    largeImageUrl: item.largeImageUrl,
-    addedAt: serverTimestamp(), // 本棚に追加した日時
-    status: status, // 読書状態（未読/既読など）の初期値 unread
-    score: score || 0,       // 点数（未入力なら0）
-    comment: comment || "",  // 感想（未入力なら空文字）
-    caption: item.itemCaption || "",
-    itemUrl: item.itemUrl,
-    publisherName: item.publisherName,
-    salesDate: item.salesDate,
-    booksGenreId: item.booksGenreId,
-    reviewAverage: item.reviewAverage,
-    reviewCount: item.reviewCount,
-  };
-
   try {
     // ユーザー専用の本棚に書き込み
-    await setDoc(shelfRef, shelfData);
-    console.log("マイ本棚に登録完了！");
+    const res = await fetch("/api/shelf", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ item, score, comment, status }),
+    });
+    if(!res.ok) throw new Error("保存に失敗しました");
   } catch (e) {
     console.error("マイ本棚保存失敗:", e);
     toast.error("本棚に登録失敗")

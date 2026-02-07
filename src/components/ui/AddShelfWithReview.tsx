@@ -12,8 +12,10 @@ export const AddShelfWithReview = ({ book, onClose }:{book: Book, onClose: () =>
   const [comment, setComment] = useState("");
   const [showForm, setShowForm] = useState(false);
 
+  const user = auth.currentUser;
+
   const handleSave = async () => {
-    const user = auth.currentUser;
+
     if (!user) return toast.error("ログインしてください");
 
     // スコアによって status を決める
@@ -31,20 +33,29 @@ export const AddShelfWithReview = ({ book, onClose }:{book: Book, onClose: () =>
     try {
       await saveBookToDb(book);
       // 決まった status を第5引数に渡す
-      await addToMyShelf(user.uid, book, score, comment, status);
+      await addToMyShelf( book, score, comment, status);
 
-      toast.success(status === "readed" ? `本棚に『${book.title}』を追加しました` : "Reading listに追加しました");
+      toast.success(status === "readed" ? `本棚に『${book.title}』を追加しました` : `Reading listに『${book.title}』を追加しました`);
       setShowForm(false);
       onClose();
     } catch (e) {
-      toast.error("エラーが発生しました");
+      toast.error("[保存失敗] エラーが発生しました");
       console.error(e);
     }
   };
 
-  // ... (JSX部分は変更なし)
+  if (!showForm && !user) {
+    return (
+      <button
+        onClick={() => toast.error("ログインしてください")}
+        className="w-full bg-[#C89B3C] text-white py-2 text-xs font-bold tracking-widest uppercase hover:bg-[#b08834] transition-colors rounded-sm shadow-md"
+      >
+        本棚に追加する
+      </button>
+    );
+  }
 
-  if (!showForm) {
+  if (!showForm && user) {
     return (
       <button
         onClick={() => setShowForm(true)}
