@@ -151,7 +151,7 @@ export default function MyShelf() {
                     <img src={book.largeImageUrl} className="w-full h-full group-hover:-translate-y-1 transition-transform object-cover"/>
                     {sortType === "score" && (<div className="absolute top-0 right-0 bg-[#C89B3C] text-white text-[9px] px-1 font-bold">★{book.score}</div>)}
                     {sortType === "salesDate" && (<div className="absolute top-0 right-0 line-clamp-1 rounded bg-black/30 text-white text-[9px] px-1 font-bold">{book.salesDate}</div>)}
-                    {sortType === "author" && (<div className="text-center line-clamp-1 rounded text-[#1F4D4F] text-[9px] px-1 mt-2 font-bold">{book.author}</div>)}
+                    {sortType === "author" && (<div className="text-center line-clamp-1 rounded text-[#1F4D4F] text-[11px] px-1 mt-2 font-bold">{book.author}</div>)}
                     {/* 本を置いてる感 */}
                     {/* <div className="-z-10 h-1.5 absolute -right-4 -left-4 bg-amber-800"></div> */}
                   </div>
