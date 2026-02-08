@@ -16,7 +16,7 @@ export const Footer = () => {
 
   return (
     // // フッター枠：画面下部固定
-    <footer className='fixed bottom-0 left-0 w-full bg-[#F5F3EF]/90 backdrop-blur-md border-t border-[#1F4D4F]/10 z-40'>
+    <footer className='lerative fixed bottom-0 left-0 w-full bg-[#F5F3EF]/90 backdrop-blur-md border-t border-[#1F4D4F]/10 z-40'>
       <div className='max-w-7xl mx-auto px-6 h-16 flex items-center justify-between'>
 
         {/* // 左側：ロゴ（PC表示） */}
@@ -47,7 +47,7 @@ export const Footer = () => {
             </Link>
           ))}
         </nav>
-
+        <small className='text-[#1F4D4F]/70 text-[9px] p-1 absolute right-0 bottom-0'>&copy; N - S</small>
       </div>
     </footer>
   )
