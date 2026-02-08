@@ -78,7 +78,7 @@ export const BookDetailModal = ({
     >
       {/* --- モーダル本体 --- */}
       <div
-        className="bg-[#F5F3EF] max-w-2xl max-h-11/12 w-full rounded-sm overflow-hidden flex flex-col md:flex-row shadow-2xl animate-in zoom-in duration-200"
+        className="bg-[#F5F3EF] max-w-2xl max-h-10/12 w-full rounded-sm overflow-hidden flex flex-col md:flex-row shadow-2xl animate-in zoom-in duration-200"
         onClick={e => e.stopPropagation()}
       >
 
@@ -109,7 +109,7 @@ export const BookDetailModal = ({
 
 
           {/* 削除ボタン */}
-          <div className="mt-auto pt-10 w-full flex flex-col items-center">
+          <div className="mt-auto pt-3 md:pt-10 w-full flex flex-col items-center">
             {mode === 'shelf' && (
               <button
                 onClick={() => setShowDeleteConfirm?.(true)}
@@ -122,7 +122,7 @@ export const BookDetailModal = ({
           </div>
         </div>
 
-        {/* --- 削除確認ダイアログ（本棚モード時のみ条件付きレンダリング） --- */}
+        {/* --- 削除確認ダイアログ（本棚モード時） --- */}
         {mode === 'shelf' && showDeleteConfirm && (
           <div className="fixed inset-0 z-60 flex items-center justify-center p-4 bg-[#1F4D4F]/40 backdrop-blur-[2px] animate-in fade-in"
             onClick={() => setShowDeleteConfirm?.(false)}
@@ -155,7 +155,7 @@ export const BookDetailModal = ({
             <p className="text-[#C89B3C] font-medium text-sm">{selectedBook.author}</p>
           </div>
 
-          {/* あらすじ（あれば表示） */}
+          {/* あらすじ */}
           {description && !isEditing && (
             <div className="text-sm leading-relaxed text-[#1F4D4F]/80 mb-6 italic border-l-2 border-[#1F4D4F]/10 pl-4">
               <p className="line-clamp-8 leading-6 tracking-wide">{description}</p>

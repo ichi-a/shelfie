@@ -47,7 +47,7 @@ export const Footer = () => {
             </Link>
           ))}
         </nav>
-        <small className='text-[#1F4D4F]/70 text-[9px] p-1 absolute right-0 bottom-0'>&copy; N - S</small>
+        <small className='text-[#1F4D4F]/70 text-[9px] p-1 absolute right-0 bottom-0'>&copy;2026 N-S</small>
       </div>
     </footer>
   )
