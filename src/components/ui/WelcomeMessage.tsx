@@ -40,17 +40,17 @@ if (user) return null
         ログインしてShelfieを楽しんでください！
       </p>
       </>)}
-        <div className="mx-auto w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 justify-items-center">
-          <div className="w-full max-w-100 aspect-16/12 relative border border-black overflow-hidden">
+        <div className="mx-auto w-10/12 max-w-6xl grid grid-cols-1 md:grid-cols-2 justify-items-center">
+          <div className="w-full max-w-125 aspect-16/12 relative border border-black overflow-hidden">
             <Image src={ai_recommend} alt="アプリデモ画像" className="object-cover"/>
           </div>
-          <div className="w-full max-w-100 aspect-16/12 relative border border-black overflow-hidden">
+          <div className="w-full max-w-125 aspect-16/12 relative border border-black overflow-hidden">
             <Image src={shelf_search} alt="アプリデモ画像" className="object-cover"/>
           </div>
-          <div className="w-full max-w-100 aspect-16/12 relative border border-black overflow-hidden">
+          <div className="w-full max-w-1125 aspect-16/12 relative border border-black overflow-hidden">
             <Image src={my_shelf} alt="アプリデモ画像" fill className="object-cover"/>
           </div>
-          <div className="w-full max-w-100 aspect-16/12 relative border border-black overflow-hidden">
+          <div className="w-full max-w-125 aspect-16/12 relative border border-black overflow-hidden">
             <Image src={book_detail} alt="アプリデモ画像" fill className="object-cover"/>
           </div>
         </div>
