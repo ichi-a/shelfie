@@ -9,8 +9,8 @@ export default function PWAbtn() {
   if (!isInstallable) return null;
 
   return (
-    <div className="">
-      <button onClick={install}>
+    <div className="bg-blue-600 w-full h-300">
+      <button onClick={install} className="text-6xl">
         インストール
       </button>
     </div>
