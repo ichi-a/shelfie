@@ -27,14 +27,14 @@ export default function manifest(): MetadataRoute.Manifest {
     ],
     screenshots: [
       {
-        src: '/screenshots/mobile_screenshot.png',
+        src: '/screenshot/mobile_screenshot.png',
         sizes: '1080x1920',
         type: 'image/png',
         form_factor: 'narrow',
         label: 'Mobile View',
       },
       {
-        src: '/screenshots/pc_screenshot.png',
+        src: '/screenshot/pc_screenshot.png',
         sizes: '1920x1080',
         type: 'image/png',
         form_factor: 'wide',
