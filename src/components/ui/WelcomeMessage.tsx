@@ -31,7 +31,7 @@ if (user) return null
 
 
   return (
-    <div className="max-w-420 mt-30 flex flex-col items-center justify-center px-4 text-center mx-auto">
+    <div className="max-w-420 mt-30 flex flex-col items-center justify-center py-4 text-center mx-auto">
       {user ? ("") : (<>
       <h2 className="text-2xl font-bold text-[#1F4D4F] tracking-tight mb-3">
         Welcome to <span className="text-[#C89B3C]">Shelfie</span>
@@ -40,7 +40,7 @@ if (user) return null
         ログインしてShelfieを楽しんでください！
       </p>
       </>)}
-        <div className="mx-auto w-10/12 max-w-400 grid grid-cols-1 p-5 gap-5 justify-items-center">
+        <div className="mx-auto w-10/12 max-w-400 grid grid-cols-1 gap-5 justify-items-center">
           <p className="text-xl font-serif font-bold p-1 text-[#1F4D4F]">アプリ紹介</p>
           <div className="h-1 w-62 bg-[#C89B3C] mx-auto mb-15" />
           <p className="text-[#1F4D4F]/80 font-medium mt-8">AI司書があなたの本棚を分析しベストな１冊を提案します！</p>
