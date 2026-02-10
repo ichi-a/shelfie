@@ -19,9 +19,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
-      <head>
-        <link rel="manifest" href="/manifest.json" />
-      </head>
       <body
         className={`bg-[#F5F3EF]`}
       >
