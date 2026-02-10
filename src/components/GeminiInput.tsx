@@ -101,37 +101,42 @@ export const GeminiInput = () => {
 
       {recommendation && (
         // 枠
-        <div className="mt-15 mx-auto bg-[#F5F3EF] max-w-200 max-h-11/12 w-full rounded-sm overflow-hidden flex flex-col md:flex-row shadow-2xl animate-in zoom-in duration-200">
+        <div className="mt-15 mx-auto bg-[#F5F3EF] min-h-[30vh] max-w-200 max-h-11/12 w-full rounded-sm overflow-hidden flex flex-col md:flex-row shadow-2xl animate-in zoom-in duration-200">
 
           {/* 左カラム */}
           <div className="mx-auto w-full h-auto md:w-2/5 bg-white p-4 md:p-8 flex flex-col items-center border-r border-[#1F4D4F]/10">
                 {bookDetails[0] ? (
                   <div>
                     {bookDetails.map((item, index) => (
+
+
                 <div
-                  key={index} onClick={() => setSelectedBook(item)}
-                  className="w-full min-h-60 mx-auto group flex flex-col ">
-                  {/* 画像枠  */}
-                  <div
-                    className="mx-auto relative w-30 h-46 overflow-hidden cursor-pointer min-w-2/3 shadow-sm hover:shadow-xl transition-all duration-300 transform border border-black/5">
-                    <img
-                      src={item.largeImageUrl}
-                      alt={item.title}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                    />
-                    {/* ホバー時にオーバーレイ */}
-                    <div className="w-full absolute inset-0 bg-[#1F4D4F]/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                      <span className="bg-white/90 text-[#1F4D4F] text-xs font-bold py-1 px-3 rounded-full shadow-lg">詳細をみる</span>
-                    </div>
-                  </div>
-                  {/* 本のタイトル枠 */}
-                  <div className="p-1 md:p-3 mt-3 bg-white grow flex flex-col md:justify-between mx-auto">
-                    <p className="text-[#1F4D4F] text-xs font-bold line-clamp-1 text-center md:leading-snug mb-1 group-hover:text-[#C89B3C] transition-colors">
-                      {item.title}
-                    </p>
-                    <p className="text-[10px] text-[#1F4D4F]/70 text-center truncate line-clamp-1">{item.author}</p>
+                key={index} onClick={() => setSelectedBook(item)}
+                className="group flex flex-col bg-white rounded-sm overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-black/5">
+                {/* 画像枠 - アスペクト比 */}
+                <div
+                  className="relative aspect-2/3 w-33 h-48 overflow-hidden cursor-pointer">
+                  <img
+                    src={item.largeImageUrl}
+                    alt={item.title}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                  {/* ホバー時にゴールドのオーバーレイ */}
+                  <div className="absolute inset-0 bg-[#1F4D4F]/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <span className="bg-white/90 text-[#1F4D4F] text-xs font-bold py-1 px-3 rounded-full shadow-lg">詳細をみる</span>
                   </div>
                 </div>
+
+                {/* 本のタイトル枠 */}
+                <div className="p-3 bg-white grow flex flex-col justify-between">
+                  <p className="text-xs font-bold line-clamp-2 leading-snug mb-1 group-hover:text-[#C89B3C] transition-colors">
+                    {item.title}
+                  </p>
+                  <p className="text-[10px] text-gray-500 truncate">{item.author}</p>
+                </div>
+              </div>
+
+
               ))}
                   </div>
                 ) : (
