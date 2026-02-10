@@ -9,7 +9,7 @@ export default async function Home() {
 
   return (
     <div className="p-2 bg-[#F5F3EF]">
-      {/* <Loading /> */}
+      <Loading />
       <AuthButton />
       <Welcome />
       <GeminiInput />

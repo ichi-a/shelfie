@@ -26,16 +26,16 @@ export const Loading = () => {
     return () => unsubscribe();
   }, []);
 
-  // 1. ロード中は、全画面を白くして「ロード中」だけを出す
+  // 1. ロード中は、loading...だけを出す
   if (loading) {
     return (
-      <div className="fixed inset-0 z-9999 w-screen h-screen bg-[#F5F3EF] flex items-center justify-center">
-        <p className="text-3xl text-[#1F4D4F]/70 animate-pulse">Loading...</p>
+      <div className="fixed inset-0 z-9999 w-screen h-screen bg-[#F5F3EF] flex items-start justify-center">
+        <p className="text-3xl text-[#1F4D4F]/70 animate-pulse mt-60">Loading...</p>
       </div>
     );
   }
 
-  // 2. ログイン済みの場合は何も表示しない（メインコンテンツが表示される）
+  // 2. ログイン済みの場合は何も表示しない
   if (user) {
     return null;
   }
