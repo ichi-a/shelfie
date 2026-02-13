@@ -10,7 +10,7 @@ import { Timestamp } from "firebase/firestore";
 interface BookDetailModalProps {
   selectedBook: Book | null;
   onClose: () => void;
-  // モード指定: 'shelf' (本棚) または 'search' (AI検索/追加用)
+  // モード指定: 'shelf' | 'search' | 'ai'
   mode: ModalMode
 
 
@@ -176,20 +176,25 @@ export const BookDetailModal = ({
               // 【本棚モード：編集フォーム】
               <div className="p-4 border border-[#C89B3C]/30 bg-white rounded-sm space-y-4">
                 <div>
-                  {editScore >= 1 && (<label className="text-sm font-bold block mb-2 uppercase opacity-60">SCORE: {editScore}</label>)}
-                  {editScore === 0 && (<label className="text-sm font-bold block mb-2 uppercase opacity-60 text-[#1F4D4F]">未読</label>)}
+                  {editScore >= 1 && (<label className="text-sm font-bold block mb-2 uppercase text-[#C89B3C]"><span className="text-sm text-[#1F4D4F]/70 font-medium">SCORE: </span>{editScore}</label>)}
+                  {editScore === 0 && (<label className="text-sm font-bold block mb-2 uppercase text-[#C89B3C]"><span className="text-sm text-[#1F4D4F]/70 font-medium">SCORE: </span>未読</label>)}
 
                   <div className="flex gap-1 text-2xl cursor-pointer">
                     {[1, 2, 3, 4, 5].map((num) => (
                       <button
                         key={num}
                         onClick={() => setEditScore?.(num)}
-                        className={`${num <= (editScore || 0) ? "text-[#C89B3C]" : "text-gray-200"}`}
+                        className={`${num <= (editScore || 0) ? "text-[#C89B3C]" : "text-gray-200"} active:text-[#C89B3C] hover:scale-[1.1]`}
                       >
                         ★
                       </button>
                     ))}
-                    <button onClick={() => setEditScore?.(0)} className="text-sm text-gray-400 ml-2 hover:underline">未読にする</button>
+                    {!editScore || !selectedBook.score ? (
+                      <p className="text-sm text-gray-400 ml-2 hover:underline"></p>
+                    ) : (
+                      <button onClick={() => setEditScore?.(0)} className="text-sm text-gray-400 ml-2 hover:underline">未読にする</button>
+                    )}
+
                   </div>
                 </div>
                 <div>
@@ -210,9 +215,7 @@ export const BookDetailModal = ({
                     className="w-full border border-[#1F4D4F]/10 text-sm p-2 h-20 resize-none bg-white focus:outline-[#C89B3C] focus:ring-1 focus:ring-[#C89B3C] transition-all"
                     maxLength={48}
                   />
-                  )
-
-                  }
+                  )}
 
                 </div>
                 <div className="flex gap-2">

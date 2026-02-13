@@ -146,12 +146,15 @@ export default function MyShelf() {
                   </div>
               <div className="grid grid-cols-2 min-[480px]:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-6">
                 {readBooks.map(book => (
-                  <div key={book.isbn} onClick={() => openModal(book)} className="relative m-3 z-1 cursor-pointer group rounded mx-auto min-w-33 min-h-49.5 shadow-xl">
+                  <div key={book.isbn} onClick={() => openModal(book)} className="group relative m-3 z-1 cursor-pointer group rounded mx-auto min-w-33 min-h-49.5 shadow-xl overflow-hidden">
                     {/* {sortType === "author" && (<div className="line-clamp-1 rounded bg-black/40 text-white text-[9px] px-1 font-bold">{book.author}</div>)} */}
-                    <img src={book.largeImageUrl} className="w-full h-full group-hover:-translate-y-1 transition-transform object-cover"/>
-                    {sortType === "score" && (<div className="absolute top-0 right-0 bg-[#C89B3C] text-white text-[9px] px-1 font-bold">★{book.score}</div>)}
-                    {sortType === "salesDate" && (<div className="absolute top-0 right-0 line-clamp-1 rounded bg-black/30 text-white text-[9px] px-1 font-bold">{book.salesDate}</div>)}
+                    <img src={book.largeImageUrl} className="w-full h-full transition-transform duration-500 group-hover:scale-110 object-cover"/>
+                    {sortType === "score" && (<div className="z-10 absolute top-0 right-0 bg-[#C89B3C] text-white text-[9px] px-1 font-bold">★{book.score}</div>)}
+                    {sortType === "salesDate" && (<div className="z-10 absolute top-0 right-0 line-clamp-1 rounded bg-black/30 text-white text-[9px] px-1 font-bold">{book.salesDate}</div>)}
                     {sortType === "author" && (<div className="text-center line-clamp-1 rounded text-[#1F4D4F] text-[11px] px-1 mt-2 font-bold">{book.author}</div>)}
+                    <div className="absolute inset-0 bg-[#1F4D4F]/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <span className="bg-white/90 text-[#1F4D4F] text-xs font-bold py-1 px-3 rounded-full shadow-lg">詳細をみる</span>
+                    </div>
                     {/* 本を置いてる感 */}
                     {/* <div className="-z-10 h-1.5 absolute -right-4 -left-4 bg-amber-800"></div> */}
                   </div>
@@ -166,8 +169,11 @@ export default function MyShelf() {
               <h2 className="border-b-2 border-[#C89B3C] w-32 pb-1 mb-3 text-[#1F4D4F] font-serif font-bold">Reading list</h2>
               <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-6">
                 {unreadBooks.map(book => (
-                  <div key={book.isbn} onClick={() => openModal(book)} className="cursor-pointer group">
-                    <img src={book.largeImageUrl} className="shadow-md group-hover:-translate-y-1 transition-transform border border-black/5" />
+                  <div key={book.isbn} onClick={() => openModal(book)} className="cursor-pointer group relative overflow-hidden">
+                    <img src={book.largeImageUrl} className="shadow-md w-full h-full transition-transform duration-500 group-hover:scale-110 object-cover" />
+                    <div className="absolute inset-0 bg-[#1F4D4F]/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <span className="bg-white/90 text-[#1F4D4F] text-xs font-bold py-1 px-3 rounded-full shadow-lg">詳細をみる</span>
+                    </div>
                   </div>
                 ))}
               </div>

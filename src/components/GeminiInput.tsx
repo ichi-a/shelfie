@@ -105,6 +105,7 @@ export const GeminiInput = () => {
 
           {/* 左カラム */}
           <div className="mx-auto w-full h-auto md:w-2/5 bg-white p-4 md:p-8 flex flex-col items-center border-r border-[#1F4D4F]/10">
+                <p className="text-[#C89B3C] p-2 italic text-sm">AI司書おすすめ</p>
                 {bookDetails[0] ? (
                   <div>
                     {bookDetails.map((item, index) => (
@@ -114,18 +115,18 @@ export const GeminiInput = () => {
                 key={index} onClick={() => setSelectedBook(item)}
                 className="group flex flex-col bg-white rounded-sm overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-black/5">
                 {/* 画像枠 - アスペクト比 */}
-                <div
-                  className="relative aspect-2/3 w-33 h-48 overflow-hidden cursor-pointer">
-                  <img
-                    src={item.largeImageUrl}
-                    alt={item.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
-                  {/* ホバー時にゴールドのオーバーレイ */}
-                  <div className="absolute inset-0 bg-[#1F4D4F]/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <span className="bg-white/90 text-[#1F4D4F] text-xs font-bold py-1 px-3 rounded-full shadow-lg">詳細をみる</span>
+                  <div
+                    className="relative aspect-2/3 w-33 h-48 overflow-hidden cursor-pointer flex flex-col items-center justify-center">
+                    <img
+                      src={item.largeImageUrl}
+                      alt={item.title}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+                    {/* ホバー時にゴールドのオーバーレイ */}
+                    <div className="absolute inset-0 bg-[#1F4D4F]/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <span className="bg-white/90 text-[#1F4D4F] text-xs font-bold py-1 px-3 rounded-full shadow-lg">詳細をみる</span>
+                    </div>
                   </div>
-                </div>
 
                 {/* 本のタイトル枠 */}
                 <div className="p-3 bg-white grow flex flex-col justify-between">

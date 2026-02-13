@@ -72,40 +72,45 @@ export const AddShelfWithReview = ({ book, onClose }:{book: Book, onClose: () =>
   }
 
   return (
-    <div className="border border-[#1F4D4F]/20 p-4 mt-2 text-left bg-[#F5F3EF] shadow-inner rounded-sm space-y-4 animate-in fade-in slide-in-from-top-1 duration-200">
+    <div className="border border-[#C89B3C]/30 p-4 mt-2 text-left bg-white shadow-inner rounded-sm space-y-4 animate-in fade-in slide-in-from-top-1 duration-200">
       <div>
         <div className="flex justify-between items-center mb-2">
-          <label className="text-[10px] font-bold uppercase tracking-wider opacity-60">Score</label>
-          <span className="text-[#C89B3C] font-bold text-xs">{score > 0 ? `${score} / 5` : "未読"}</span>
+          <label className="text-[14px] text-[#C89B3C] font-bold uppercase"><span className="text-sm text-[#1F4D4F] font-medium">Score: </span>{score > 0 ? ` ${score}`:"未読" }</label>
         </div>
 
         {/* ★ 星マーク評価（ポチポチ選択） */}
-        <div className="flex gap-1.5 cursor-pointer">
+        <div className="flex gap-1.5">
           {[1, 2, 3, 4, 5].map((num) => (
             <button
               key={num}
               type="button"
               onClick={() => setScore(num)}
-              className={`text-xl transition-all hover:scale-110 ${
+              className={`text-xl transition-all hover:scale-110 active:text-[#C89B3C] ${
                 num <= score ? "text-[#C89B3C]" : "text-gray-300"
               }`}
             >
               ★
             </button>
           ))}
-          <button
+          {!score && !comment ? (
+            ""
+          ) : (
+            <button
             type="button"
             onClick={unreadBtn}
             className="text-sm text-[#1F4D4F]/40 ml-auto hover:text-[#1F4D4F] underline"
           >
-            未読
+            Reading listへ追加
           </button>
+          ) }
+
         </div>
       </div>
 
       <div>
         <label className="text-[10px] font-bold tracking-wider opacity-60 block mb-1">My Note</label>
-        {score > 0 && (<textarea
+        {score > 0 && (
+          <textarea
           value={comment}
           onChange={(e) => setComment(e.target.value)}
           onKeyDown={(e) => {
