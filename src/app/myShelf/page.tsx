@@ -146,7 +146,7 @@ export default function MyShelf() {
                   </div>
               <div className="grid grid-cols-2 min-[480px]:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-6">
                 {readBooks.map(book => (
-                  <div key={book.isbn} onClick={() => openModal(book)} className="flex flex-col hover:-translate-y-1 hover:shadow-xl transition-all duration-300 transform group m-3 z-1 cursor-pointer group rounded mx-auto min-w-33 min-h-49.5 shadow-sm overflow-hidden">
+                  <div key={book.isbn} onClick={() => openModal(book)} className="flex flex-col hover:-translate-y-1 hover:shadow-xl transition-all duration-300 transform group m-3 z-1 cursor-pointer group rounded mx-auto min-w-33 min-h-49.5 shadow-sm overflow-hidden bg-white">
                     {/* {sortType === "author" && (<div className="line-clamp-1 rounded bg-black/40 text-white text-[9px] px-1 font-bold">{book.author}</div>)} */}
                     <div className="flex-1 relative overflow-hidden">
                       <img src={book.largeImageUrl} className="w-full h-full transition-transform duration-500 group-hover:scale-110 object-cover"/>
