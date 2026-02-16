@@ -47,7 +47,7 @@ export const Welcome = () => {
         <p className="mt-8 border-b-2 border-[#1F4D4F]/20 pb-1 font-medium text-[#1F4D4F]/90">
           AI司書があなたの本棚を分析しベストな１冊を提案します！
         </p>
-        <div className="relative mb-10 aspect-16/12 w-full max-w-300 overflow-hidden rounded border border-[#1F4D4F]/20">
+        <div className="relative mb-10 aspect-16/12 w-full max-w-300 overflow-hidden rounded border border-[#1F4D4F]/80 shadow-xl">
           <Image
             priority
             src={ai_recommend}
@@ -59,7 +59,7 @@ export const Welcome = () => {
         <p className="mt-26 border-b-2 border-[#1F4D4F]/20 pb-1 font-medium text-[#1F4D4F]/90">
           キーワード検索で本を本棚に追加しましょう！
         </p>
-        <div className="relative mb-10 aspect-16/12 w-full max-w-300 overflow-hidden rounded border border-[#1F4D4F]/20">
+        <div className="relative mb-10 aspect-16/12 w-full max-w-300 overflow-hidden rounded border border-[#1F4D4F]/80 shadow-xl">
           <Image
             src={shelf_search}
             alt="アプリデモ画像"
@@ -70,7 +70,7 @@ export const Welcome = () => {
         <p className="mt-8 border-b-2 border-[#1F4D4F]/20 pb-1 font-medium text-[#1F4D4F]/90">
           本棚にお気に入りの本を並べましょう！
         </p>
-        <div className="relative mb-10 aspect-16/12 w-full max-w-300 overflow-hidden rounded border border-[#1F4D4F]/20">
+        <div className="relative mb-10 aspect-16/12 w-full max-w-300 overflow-hidden rounded border border-[#1F4D4F]/80 shadow-xl">
           <Image
             src={my_shelf}
             alt="アプリデモ画像"
@@ -81,7 +81,7 @@ export const Welcome = () => {
         <p className="mt-8 border-b-2 border-[#1F4D4F]/20 pb-1 font-medium text-[#1F4D4F]/90">
           スコアやコメントを残してAI司書の提案の精度を上げましょう！
         </p>
-        <div className="relative mb-10 aspect-16/12 w-full max-w-300 overflow-hidden rounded border border-[#1F4D4F]/20">
+        <div className="relative mb-10 aspect-16/12 w-full max-w-300 overflow-hidden rounded border border-[#1F4D4F]/80 shadow-xl">
           <Image
             src={book_detail1}
             alt="アプリデモ画像"
