@@ -29,8 +29,8 @@ export const Loading = () => {
   // 1. ロード中は、loading...だけを出す
   if (loading) {
     return (
-      <div className="fixed inset-0 z-9999 w-screen h-screen bg-[#F5F3EF] flex items-start justify-center">
-        <p className="text-3xl text-[#1F4D4F]/70 animate-pulse mt-60">
+      <div className="fixed inset-0 z-9999 flex h-screen w-screen items-start justify-center bg-[#F5F3EF]">
+        <p className="mt-60 animate-pulse text-3xl text-[#1F4D4F]/70">
           Loading...
         </p>
       </div>

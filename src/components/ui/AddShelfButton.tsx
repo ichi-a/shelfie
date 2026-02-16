@@ -31,7 +31,7 @@ export const AddShelfButton = ({
   return (
     <button
       onClick={handleAddShelf}
-      className="w-full bg-[#C89B3C] text-white py-2 text-xs font-bold tracking-widest uppercase hover:bg-[#b08834] transition-colors rounded-sm shadow-md"
+      className="w-full rounded-sm bg-[#C89B3C] py-2 text-xs font-bold tracking-widest text-white uppercase shadow-md transition-colors hover:bg-[#b08834]"
     >
       本棚に追加する
     </button>

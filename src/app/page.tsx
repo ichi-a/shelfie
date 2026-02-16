@@ -6,7 +6,7 @@ import { DemoApp } from "@/components/ui/DemoApp";
 
 export default async function Home() {
   return (
-    <div className="p-2 bg-[#F5F3EF]">
+    <div className="bg-[#F5F3EF] p-2">
       <Loading />
       <AuthButton />
       <Welcome />

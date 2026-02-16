@@ -14,12 +14,12 @@ export default function ContactPage() {
   }, []);
 
   return (
-    <div className="min-h-screen p-8 max-w-141 mx-auto">
-      <h2 className="text-[#1F4D4F] text-lg font-bold mb-4 tracking-tight text-center">
+    <div className="mx-auto min-h-screen max-w-141 p-8">
+      <h2 className="mb-4 text-center text-lg font-bold tracking-tight text-[#1F4D4F]">
         Contact <span className="text-[#C89B3C]">Shelfie</span>
       </h2>
 
-      <div className="max-w-3xl mx-auto border border-[#1F4D4F]/10 rounded-xl overflow-hidden shadow-sm">
+      <div className="mx-auto max-w-3xl overflow-hidden rounded-xl border border-[#1F4D4F]/10 shadow-sm">
         <iframe
           data-tally-src="https://tally.so/embed/EkQzWq?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1"
           loading="lazy"

@@ -69,20 +69,20 @@ export const BookDetailModal = ({
   return (
     // --- モーダル全体を覆うオーバーレイ ---
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/30 backdrop-blur-sm transition-all animate-in fade-in"
+      className="animate-in fade-in fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4 backdrop-blur-sm transition-all"
       onClick={onClose}
     >
       {/* --- モーダル本体 --- */}
       <div
-        className="bg-[#F5F3EF] max-w-2xl max-h-10/12 w-full rounded-sm overflow-hidden flex flex-col md:flex-row shadow-2xl animate-in zoom-in duration-200"
+        className="animate-in zoom-in flex max-h-10/12 w-full max-w-2xl flex-col overflow-hidden rounded-sm bg-[#F5F3EF] shadow-2xl duration-200 md:flex-row"
         onClick={(e) => e.stopPropagation()}
       >
         {/* --- 左カラム：画像と削除ボタン --- */}
-        <div className="w-full md:w-2/5 h-auto bg-white p-2 md:p-8 flex flex-col items-center border-r border-[#1F4D4F]/10">
-          <div className="w-full h-auto max-w-45 mx-auto">
+        <div className="flex h-auto w-full flex-col items-center border-r border-[#1F4D4F]/10 bg-white p-2 md:w-2/5 md:p-8">
+          <div className="mx-auto h-auto w-full max-w-45">
             <img
               src={selectedBook.largeImageUrl}
-              className="object-cover shadow-2xl mx-auto rounded-sm"
+              className="mx-auto rounded-sm object-cover shadow-2xl"
               alt={selectedBook.title}
             />
           </div>
@@ -90,10 +90,10 @@ export const BookDetailModal = ({
           {/* 登録日 */}
           {selectedBook.addedAt && (
             <div className="mt-6 flex flex-col items-center gap-1">
-              <span className="text-[10px] tracking-widest text-[#1F4D4F]/40 font-bold">
+              <span className="text-[10px] font-bold tracking-widest text-[#1F4D4F]/40">
                 本棚に追加した日
               </span>
-              <p className="text-sm text-[#1F4D4F]/80 font-medium">
+              <p className="text-sm font-medium text-[#1F4D4F]/80">
                 {selectedBook.addedAt instanceof Timestamp
                   ? selectedBook.addedAt.toDate().toLocaleDateString("ja-JP")
                   : selectedBook.addedAt instanceof Date
@@ -104,11 +104,11 @@ export const BookDetailModal = ({
           )}
 
           {/* 削除ボタン */}
-          <div className="mt-auto pt-3 md:pt-10 w-full flex flex-col items-center">
+          <div className="mt-auto flex w-full flex-col items-center pt-3 md:pt-10">
             {mode === "shelf" && (
               <button
                 onClick={() => setShowDeleteConfirm?.(true)}
-                className="font-bold tracking-wider flex items-center gap-2 py-2 px-4 text-xs text-red-400/80 hover:text-red-600 transition-all duration-300"
+                className="flex items-center gap-2 px-4 py-2 text-xs font-bold tracking-wider text-red-400/80 transition-all duration-300 hover:text-red-600"
               >
                 <p>本棚から削除する</p>
               </button>
@@ -119,23 +119,23 @@ export const BookDetailModal = ({
         {/* --- 削除確認ダイアログ（本棚モード時） --- */}
         {mode === "shelf" && showDeleteConfirm && (
           <div
-            className="fixed inset-0 z-60 flex items-center justify-center p-4 bg-[#1F4D4F]/40 backdrop-blur-[2px] animate-in fade-in"
+            className="animate-in fade-in fixed inset-0 z-60 flex items-center justify-center bg-[#1F4D4F]/40 p-4 backdrop-blur-[2px]"
             onClick={() => setShowDeleteConfirm?.(false)}
           >
-            <div className="bg-white p-6 shadow-2xl max-w-sm w-full text-center space-y-4">
+            <div className="w-full max-w-sm space-y-4 bg-white p-6 text-center shadow-2xl">
               <p className="font-bold text-[#1F4D4F]">
                 本当にこの本を削除しますか？
               </p>
-              <div className="flex gap-3 mt-6">
+              <div className="mt-6 flex gap-3">
                 <button
                   onClick={onDelete}
-                  className="flex-1 bg-red-500 text-white py-2 text-xs font-bold uppercase tracking-widest hover:bg-red-600"
+                  className="flex-1 bg-red-500 py-2 text-xs font-bold tracking-widest text-white uppercase hover:bg-red-600"
                 >
                   削除する
                 </button>
                 <button
                   onClick={() => setShowDeleteConfirm?.(false)}
-                  className="flex-1 border border-gray-200 py-2 text-xs font-bold uppercase tracking-widest hover:text-[#C89B3C]"
+                  className="flex-1 border border-gray-200 py-2 text-xs font-bold tracking-widest uppercase hover:text-[#C89B3C]"
                 >
                   やめる
                 </button>
@@ -145,20 +145,20 @@ export const BookDetailModal = ({
         )}
 
         {/* --- 右カラム：書籍情報とアクション --- */}
-        <div className="w-full md:w-3/5 p-8 flex flex-col max-h-[85vh] overflow-y-auto">
+        <div className="flex max-h-[85vh] w-full flex-col overflow-y-auto p-8 md:w-3/5">
           {/* タイトル・著者 */}
           <div className="mb-4">
-            <h3 className="text-2xl font-bold leading-tight mb-1">
+            <h3 className="mb-1 text-2xl leading-tight font-bold">
               {selectedBook.title}
             </h3>
-            <p className="text-[#C89B3C] font-medium text-sm">
+            <p className="text-sm font-medium text-[#C89B3C]">
               {selectedBook.author}
             </p>
           </div>
 
           {/* あらすじ */}
           {description && !isEditing && (
-            <div className="text-sm leading-relaxed text-[#1F4D4F]/80 mb-6 italic border-l-2 border-[#1F4D4F]/10 pl-4">
+            <div className="mb-6 border-l-2 border-[#1F4D4F]/10 pl-4 text-sm leading-relaxed text-[#1F4D4F]/80 italic">
               <p className="line-clamp-8 leading-6 tracking-wide">
                 {description}
               </p>
@@ -170,8 +170,8 @@ export const BookDetailModal = ({
             !isEditing &&
             selectedBook.comment &&
             selectedBook.score && (
-              <div className="mb-6 p-4 bg-[#C89B3C]/10 rounded-sm">
-                <p className="text-[10px] font-bold text-[#C89B3C] mb-1">
+              <div className="mb-6 rounded-sm bg-[#C89B3C]/10 p-4">
+                <p className="mb-1 text-[10px] font-bold text-[#C89B3C]">
                   My Note
                 </p>
                 <p className="text-sm">
@@ -184,41 +184,41 @@ export const BookDetailModal = ({
             {/* --- アクションエリア --- */}
             {mode === "shelf" && isEditing ? (
               // 【本棚モード：編集フォーム】
-              <div className="p-4 border border-[#C89B3C]/30 bg-white rounded-sm space-y-4">
+              <div className="space-y-4 rounded-sm border border-[#C89B3C]/30 bg-white p-4">
                 <div>
                   {editScore >= 1 && (
-                    <label className="text-sm font-bold block mb-2 uppercase text-[#C89B3C]">
-                      <span className="text-sm text-[#1F4D4F]/70 font-medium">
+                    <label className="mb-2 block text-sm font-bold text-[#C89B3C] uppercase">
+                      <span className="text-sm font-medium text-[#1F4D4F]/70">
                         SCORE:{" "}
                       </span>
                       {editScore}
                     </label>
                   )}
                   {editScore === 0 && (
-                    <label className="text-sm font-bold block mb-2 uppercase text-[#C89B3C]">
-                      <span className="text-sm text-[#1F4D4F]/70 font-medium">
+                    <label className="mb-2 block text-sm font-bold text-[#C89B3C] uppercase">
+                      <span className="text-sm font-medium text-[#1F4D4F]/70">
                         SCORE:{" "}
                       </span>
                       未読
                     </label>
                   )}
 
-                  <div className="flex gap-1 text-2xl cursor-pointer">
+                  <div className="flex cursor-pointer gap-1 text-2xl">
                     {[1, 2, 3, 4, 5].map((num) => (
                       <button
                         key={num}
                         onClick={() => setEditScore?.(num)}
-                        className={`${num <= (editScore || 0) ? "text-[#C89B3C]" : "text-gray-200"} active:text-[#C89B3C] hover:scale-[1.1]`}
+                        className={`${num <= (editScore || 0) ? "text-[#C89B3C]" : "text-gray-200"} hover:scale-[1.1] active:text-[#C89B3C]`}
                       >
                         ★
                       </button>
                     ))}
                     {!editScore || !selectedBook.score ? (
-                      <p className="text-sm text-gray-400 ml-2 hover:underline"></p>
+                      <p className="ml-2 text-sm text-gray-400 hover:underline"></p>
                     ) : (
                       <button
                         onClick={() => setEditScore?.(0)}
-                        className="text-sm text-gray-400 ml-2 hover:underline"
+                        className="ml-2 text-sm text-gray-400 hover:underline"
                       >
                         未読にする
                       </button>
@@ -226,7 +226,7 @@ export const BookDetailModal = ({
                   </div>
                 </div>
                 <div>
-                  <label className="text-[10px] font-bold block mb-1 opacity-60">
+                  <label className="mb-1 block text-[10px] font-bold opacity-60">
                     COMMENT
                   </label>
                   {editScore > 0 && (
@@ -242,7 +242,7 @@ export const BookDetailModal = ({
                           (e.target as HTMLElement).blur(); // キーボードを閉じる
                         }
                       }}
-                      className="w-full border border-[#1F4D4F]/10 text-sm p-2 h-20 resize-none bg-white focus:outline-[#C89B3C] focus:ring-1 focus:ring-[#C89B3C] transition-all"
+                      className="h-20 w-full resize-none border border-[#1F4D4F]/10 bg-white p-2 text-sm transition-all focus:ring-1 focus:ring-[#C89B3C] focus:outline-[#C89B3C]"
                       maxLength={48}
                     />
                   )}
@@ -250,13 +250,13 @@ export const BookDetailModal = ({
                 <div className="flex gap-2">
                   <button
                     onClick={onUpdate}
-                    className="flex-1 bg-[#1F4D4F] text-white py-2 text-[10px] font-bold uppercase tracking-widest hover:bg-[#1F4D4F]/80"
+                    className="flex-1 bg-[#1F4D4F] py-2 text-[10px] font-bold tracking-widest text-white uppercase hover:bg-[#1F4D4F]/80"
                   >
                     保存
                   </button>
                   <button
                     onClick={() => setIsEditing?.(false)}
-                    className="flex-1 border border-gray-200 py-2 text-[10px] font-bold uppercase tracking-widest hover:text-[#C89B3C]"
+                    className="flex-1 border border-gray-200 py-2 text-[10px] font-bold tracking-widest uppercase hover:text-[#C89B3C]"
                   >
                     キャンセル
                   </button>
@@ -270,7 +270,7 @@ export const BookDetailModal = ({
                   <div className="flex gap-2">
                     <button
                       onClick={() => setIsEditing?.(true)}
-                      className="flex-1 bg-[#C89B3C] text-white py-3 text-[12px] font-bold tracking-widest hover:opacity-90"
+                      className="flex-1 bg-[#C89B3C] py-3 text-[12px] font-bold tracking-widest text-white hover:opacity-90"
                     >
                       {selectedBook.status === "readed" ||
                       (selectedBook.score || 0) > 0
@@ -279,7 +279,7 @@ export const BookDetailModal = ({
                     </button>
                     <button
                       onClick={onClose}
-                      className="px-6 py-3 border border-[#1F4D4F]/20 text-[10px] font-bold rounded tracking-widest hover:text-[#C89B3C] transition-colors"
+                      className="rounded border border-[#1F4D4F]/20 px-6 py-3 text-[10px] font-bold tracking-widest transition-colors hover:text-[#C89B3C]"
                     >
                       閉じる
                     </button>
@@ -287,7 +287,7 @@ export const BookDetailModal = ({
                 ) : (
                   // 検索・AIモードのボタン・閉じる
                   <div className="flex flex-col gap-2">
-                    <div className="w-full mx-auto text-center">
+                    <div className="mx-auto w-full text-center">
                       {mode === "search" && (
                         <AddShelfWithReview
                           book={selectedBook}
@@ -300,7 +300,7 @@ export const BookDetailModal = ({
                     </div>
                     <button
                       onClick={onClose}
-                      className="w-full py-2 text-[12px] font-bold text-[#1F4D4F]/40 hover:text-[#1F4D4F] uppercase tracking-widest transition-colors"
+                      className="w-full py-2 text-[12px] font-bold tracking-widest text-[#1F4D4F]/40 uppercase transition-colors hover:text-[#1F4D4F]"
                     >
                       閉じる
                     </button>
@@ -314,7 +314,7 @@ export const BookDetailModal = ({
               <Link
                 target="blank"
                 href={selectedBook.itemUrl}
-                className="block text-center text-[10px] font-bold text-[#1F4D4F]/40 hover:text-[#1F4D4F] transition-colors tracking-[0.2em]"
+                className="block text-center text-[10px] font-bold tracking-[0.2em] text-[#1F4D4F]/40 transition-colors hover:text-[#1F4D4F]"
               >
                 詳細(外部ページ) ↗
               </Link>

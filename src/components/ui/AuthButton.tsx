@@ -17,21 +17,21 @@ export const AuthButton = () => {
 
   if (user) {
     return (
-      <div className="max-w-350 mx-auto flex items-center gap-4 justify-end bg-white/50 p-2 rounded-full border border-[#1F4D4F]/10 mb-2">
-        <div className="flex items-center gap-4 bg-white p-2 rounded-full border border-[#1F4D4F]/10">
+      <div className="mx-auto mb-2 flex max-w-350 items-center justify-end gap-4 rounded-full border border-[#1F4D4F]/10 bg-white/50 p-2">
+        <div className="flex items-center gap-4 rounded-full border border-[#1F4D4F]/10 bg-white p-2">
           {user.photoURL && (
             <img
               src={user.photoURL}
               alt=""
-              className="w-8 h-8 rounded-full border border-[#C89B3C]"
+              className="h-8 w-8 rounded-full border border-[#C89B3C]"
             />
           )}
-          <p className="text-sm font-serif font-bold text-[#1F4D4F]">
+          <p className="font-serif text-sm font-bold text-[#1F4D4F]">
             {user.displayName}
           </p>
           <button
             onClick={logout}
-            className="text-[10px] tracking-widest font-bold text-[#1F4D4F]/60 hover:text-[#C89B3C] transition-colors px-2"
+            className="px-2 text-[10px] font-bold tracking-widest text-[#1F4D4F]/60 transition-colors hover:text-[#C89B3C]"
           >
             ログアウト
           </button>
@@ -43,7 +43,7 @@ export const AuthButton = () => {
   return (
     <button
       onClick={loginWithGoogle}
-      className="m-3 flex items-center gap-2 bg-[#1F4D4F] text-[#F5F3EF] px-6 py-2 rounded-sm text-xs font-bold tracking-widest hover:bg-[#1F4D4F]/90 transition-all shadow-md"
+      className="m-3 flex items-center gap-2 rounded-sm bg-[#1F4D4F] px-6 py-2 text-xs font-bold tracking-widest text-[#F5F3EF] shadow-md transition-all hover:bg-[#1F4D4F]/90"
     >
       <span className="border-r border-[#F5F3EF]/30 pr-2">G</span>
       ログイン
