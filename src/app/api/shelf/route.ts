@@ -7,7 +7,8 @@ export async function POST(req: Request) {
   try {
     const cookieStore = await cookies();
     const session = cookieStore.get("session")?.value;
-    if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    if (!session)
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const decodedClaims = await adminAuth.verifySessionCookie(session);
     const userId = decodedClaims.uid;
@@ -23,7 +24,11 @@ export async function POST(req: Request) {
     }
 
     // ★ adminDb を使う
-    const shelfRef = adminDb.collection("users").doc(userId).collection("myShelf").doc(item.isbn);
+    const shelfRef = adminDb
+      .collection("users")
+      .doc(userId)
+      .collection("myShelf")
+      .doc(item.isbn);
 
     await shelfRef.set({
       isbn: item.isbn,
@@ -46,6 +51,9 @@ export async function POST(req: Request) {
     return NextResponse.json({ message: "Success" });
   } catch (error) {
     console.error("APIエラー詳細:", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 },
+    );
   }
 }

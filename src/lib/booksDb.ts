@@ -1,8 +1,17 @@
-import { doc, setDoc, serverTimestamp,deleteDoc, updateDoc, collection, getDocs, query, orderBy } from "firebase/firestore";
+import {
+  doc,
+  setDoc,
+  serverTimestamp,
+  deleteDoc,
+  updateDoc,
+  collection,
+  getDocs,
+  query,
+  orderBy,
+} from "firebase/firestore";
 import { db } from "./firebase";
 import { toast } from "sonner";
 import { Book } from "@/types/book";
-
 
 /**
  * 楽天APIのデータをバックグラウンドで保存する
@@ -44,8 +53,8 @@ export async function addToMyShelf(
   item: Book,
   score?: number,
   comment?: string,
-  status: "readed" | "unread" = "unread"
-  ) {
+  status: "readed" | "unread" = "unread",
+) {
   try {
     // ユーザー専用の本棚に書き込み
     const res = await fetch("/api/shelf", {
@@ -53,14 +62,13 @@ export async function addToMyShelf(
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ item, score, comment, status }),
     });
-    if(!res.ok) throw new Error("保存に失敗しました");
+    if (!res.ok) throw new Error("保存に失敗しました");
   } catch (e) {
     console.error("マイ本棚保存失敗:", e);
-    toast.error("本棚に登録失敗")
+    toast.error("本棚に登録失敗");
     throw e; // エラーを呼び出し元に伝えてalertなどを出せるようにする
   }
 }
-
 
 //  指定したユーザーの本棚を全件取得する
 export const getMyShelf = async (userId: string): Promise<Book[]> => {
@@ -72,25 +80,28 @@ export const getMyShelf = async (userId: string): Promise<Book[]> => {
   const querySnapshot = await getDocs(q);
 
   // Snapshotを普通の配列に変換して返す
-  return querySnapshot.docs.map(doc => ({...doc.data()} as Book));
+  return querySnapshot.docs.map((doc) => ({ ...doc.data() }) as Book);
 };
-
 
 export const updateBookStatus = async (
   userId: string,
   isbn: string,
-  updates: { score?: number | null | undefined; comment?: string; status?: "readed" | "unread" }
+  updates: {
+    score?: number | null | undefined;
+    comment?: string;
+    status?: "readed" | "unread";
+  },
 ) => {
   const shelfRef = doc(db, "users", userId, "myShelf", isbn);
 
   try {
     await updateDoc(shelfRef, {
       ...updates,
-      updatedAt: serverTimestamp()
+      updatedAt: serverTimestamp(),
     });
   } catch (e) {
     console.error("更新失敗:", e);
-    toast.error("更新失敗")
+    toast.error("更新失敗");
     throw e;
   }
 };

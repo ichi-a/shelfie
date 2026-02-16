@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect } from 'react';
-import Script from 'next/script';
+import { useEffect } from "react";
+import Script from "next/script";
 
 export default function ContactPage() {
   useEffect(() => {
     // ページに遷移してくるたびに Tally の埋め込みを再スキャンする
     // @ts-expect-error: Tally is loaded from an external script
-    if (typeof window.Tally !== 'undefined') {
+    if (typeof window.Tally !== "undefined") {
       // @ts-expect-error: Tally is loaded from an external script
       window.Tally.loadEmbeds();
     }

@@ -1,27 +1,28 @@
-'use client'
+"use client";
 
-import { useEffect, useState } from "react"
+import { useEffect, useState } from "react";
 
 interface InstallPromptEvent extends Event {
   readonly platforms: string[];
-  readonly userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
+  readonly userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
   prompt(): Promise<void>;
 }
 
-
 export const usePWAinstall = () => {
-  const [promptEvent, setPromptEvent] = useState<InstallPromptEvent | null>(null)
+  const [promptEvent, setPromptEvent] = useState<InstallPromptEvent | null>(
+    null,
+  );
 
   useEffect(() => {
     const handler = (e: Event) => {
       //デフォのインストールイベント抑制
       e.preventDefault();
       //イベントを保持
-      setPromptEvent(e as InstallPromptEvent)
+      setPromptEvent(e as InstallPromptEvent);
     };
-    window.addEventListener('beforeinstallprompt', handler);
+    window.addEventListener("beforeinstallprompt", handler);
 
-    return () => window.removeEventListener('beforeinstallprompt', handler);
+    return () => window.removeEventListener("beforeinstallprompt", handler);
   }, []);
 
   const install = async () => {
@@ -30,8 +31,6 @@ export const usePWAinstall = () => {
     await promptEvent.prompt();
 
     setPromptEvent(null);
-
-
-  }
+  };
   return { isInstallable: !!promptEvent, install };
-}
+};

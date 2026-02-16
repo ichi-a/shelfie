@@ -7,12 +7,14 @@ export async function GET(req: Request) {
   const type = searchParams.get("type");
   const apiKey = process.env.RAKUTEN_API_KEY;
 
-  if (!apiKey) return NextResponse.json({ error: "API Key Error" }, { status: 500 });
+  if (!apiKey)
+    return NextResponse.json({ error: "API Key Error" }, { status: 500 });
 
   // 楽天APIのベースURLを判定
-  const baseUrl = type === "Total"
-    ? "https://app.rakuten.co.jp/services/api/BooksTotal/Search/20170404"
-    : "https://app.rakuten.co.jp/services/api/BooksBook/Search/20170404";
+  const baseUrl =
+    type === "Total"
+      ? "https://app.rakuten.co.jp/services/api/BooksTotal/Search/20170404"
+      : "https://app.rakuten.co.jp/services/api/BooksBook/Search/20170404";
 
   // 今あるパラメータをそのまま引き継ぐ
   const newParams = new URLSearchParams(searchParams);

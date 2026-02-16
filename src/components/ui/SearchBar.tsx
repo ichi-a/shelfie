@@ -1,6 +1,6 @@
-'use client'
+"use client";
 
-import { useState } from "react"
+import { useState } from "react";
 
 interface SearchBarProps {
   onSearch: (query: string) => void;
@@ -8,7 +8,7 @@ interface SearchBarProps {
 }
 
 const SearchBar = ({ onSearch, isLoading }: SearchBarProps) => {
-  const [query, setQuery] = useState("")
+  const [query, setQuery] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,7 +23,7 @@ const SearchBar = ({ onSearch, isLoading }: SearchBarProps) => {
     if (!query.trim() || isLoading) return;
 
     onSearch(query);
-  }
+  };
 
   return (
     <div className="w-full max-w-2xl mx-auto px-4 mt-8">
@@ -54,7 +54,7 @@ const SearchBar = ({ onSearch, isLoading }: SearchBarProps) => {
         </button>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default SearchBar
+export default SearchBar;

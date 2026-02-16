@@ -20,9 +20,15 @@ export const AuthButton = () => {
       <div className="max-w-350 mx-auto flex items-center gap-4 justify-end bg-white/50 p-2 rounded-full border border-[#1F4D4F]/10 mb-2">
         <div className="flex items-center gap-4 bg-white p-2 rounded-full border border-[#1F4D4F]/10">
           {user.photoURL && (
-            <img src={user.photoURL} alt="" className="w-8 h-8 rounded-full border border-[#C89B3C]" />
+            <img
+              src={user.photoURL}
+              alt=""
+              className="w-8 h-8 rounded-full border border-[#C89B3C]"
+            />
           )}
-          <p className="text-sm font-serif font-bold text-[#1F4D4F]">{user.displayName}</p>
+          <p className="text-sm font-serif font-bold text-[#1F4D4F]">
+            {user.displayName}
+          </p>
           <button
             onClick={logout}
             className="text-[10px] tracking-widest font-bold text-[#1F4D4F]/60 hover:text-[#C89B3C] transition-colors px-2"

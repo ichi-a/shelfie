@@ -1,4 +1,3 @@
-
 import { Book } from "@/types/book";
 
 export async function getBookRecommendations(books: Book[]) {

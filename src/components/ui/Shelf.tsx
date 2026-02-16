@@ -1,7 +1,4 @@
-
 // import { Book } from "@/types/book";
-
-
 
 // export default async function WallShelfBooks({data}:Book) {
 

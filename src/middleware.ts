@@ -10,7 +10,7 @@ export function middleware(request: NextRequest) {
   const protectedPaths = ["/myShelf", "/search"];
 
   // 現在のパスがガード対象リストに含まれているかチェック
-  const isProtected = protectedPaths.some(path => pathname.startsWith(path));
+  const isProtected = protectedPaths.some((path) => pathname.startsWith(path));
 
   if (isProtected) {
     if (!session) {

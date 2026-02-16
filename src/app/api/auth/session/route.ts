@@ -7,13 +7,15 @@ export async function POST(request: Request) {
     const { idToken } = await request.json();
     const expiresIn = 60 * 60 * 24 * 5 * 1000; // 5日間
 
-    const sessionCookie = await adminAuth.createSessionCookie(idToken, { expiresIn });
+    const sessionCookie = await adminAuth.createSessionCookie(idToken, {
+      expiresIn,
+    });
     const cookieStore = await cookies();
 
     cookieStore.set("session", sessionCookie, {
       maxAge: expiresIn,
       httpOnly: true, // JavaScriptからアクセス不可にする
-      secure: true,   // HTTPS必須
+      secure: true, // HTTPS必須
       sameSite: "lax",
       path: "/",
     });
@@ -29,9 +31,9 @@ export async function DELETE() {
   cookieStore.delete("session");
   cookieStore.set("session", "", {
     path: "/",
-    maxAge: 0,          // 即座に無効化
+    maxAge: 0, // 即座に無効化
     httpOnly: true,
-    secure: true,       // 本番環境（HTTPS）用
+    secure: true, // 本番環境（HTTPS）用
     sameSite: "lax",
   });
   return NextResponse.json({ status: "success" });
