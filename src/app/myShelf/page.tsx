@@ -7,6 +7,7 @@ import { getMyShelf, updateBookStatus, deleteBookFromDb } from "@/lib/booksDb";
 import { toast } from "sonner";
 import { BookDetailModal } from "@/components/ui/BookDetailModal";
 import { Book, BookStatus } from "@/types/book";
+import Image from "next/image";
 
 export default function MyShelf() {
   type Sort = "addedAt" | "author" | "salesDate" | "score";
@@ -175,10 +176,22 @@ export default function MyShelf() {
                       className="group group z-1 m-3 mx-auto flex min-h-49.5 min-w-33 transform cursor-pointer flex-col overflow-hidden rounded bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
                     >
                       {/* {sortType === "author" && (<div className="line-clamp-1 rounded bg-black/40 text-white text-[9px] px-1 font-bold">{book.author}</div>)} */}
-                      <div className="relative flex-1 overflow-hidden">
-                        <img
-                          src={book.largeImageUrl}
-                          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      <div className="relative flex-1 overflow-hidden bg-[#1F4D4F]/30">
+                        <Image
+                          src={book.largeImageUrl || ""}
+                          alt=""
+                          fill
+                          sizes="198px"
+                          priority
+                          onLoad={(event) => {
+                            const target = event.target as HTMLImageElement;
+                            if (
+                              target.src.indexOf("data:image/gif;base64") < 0
+                            ) {
+                              target.classList.remove("opacity-0");
+                            }
+                          }}
+                          className="animate-in fade-in fill-mode-forwards object-cover opacity-0 transition-transform duration-500 group-hover:scale-110"
                         />
                         <div className="absolute inset-0 flex items-center justify-center bg-[#1F4D4F]/20 opacity-0 transition-opacity group-hover:opacity-100">
                           <span className="rounded-full bg-white/90 px-3 py-1 text-xs font-bold text-[#1F4D4F] shadow-lg">
@@ -221,11 +234,14 @@ export default function MyShelf() {
                     <div
                       key={book.isbn}
                       onClick={() => openModal(book)}
-                      className="group relative cursor-pointer overflow-hidden"
+                      className="group relative min-h-49.5 min-w-33 cursor-pointer overflow-hidden"
                     >
-                      <img
-                        src={book.largeImageUrl}
-                        className="h-full w-full object-cover shadow-md transition-transform duration-500 group-hover:scale-110"
+                      <Image
+                        src={book.largeImageUrl || ""}
+                        alt=""
+                        fill
+                        sizes="198px"
+                        className="object-cover shadow-md transition-transform duration-500 group-hover:scale-110"
                       />
                       <div className="absolute inset-0 flex items-center justify-center bg-[#1F4D4F]/20 opacity-0 transition-opacity group-hover:opacity-100">
                         <span className="rounded-full bg-white/90 px-3 py-1 text-xs font-bold text-[#1F4D4F] shadow-lg">
