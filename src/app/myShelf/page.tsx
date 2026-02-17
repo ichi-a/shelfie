@@ -229,7 +229,7 @@ export default function MyShelf() {
                 <h2 className="mb-3 w-32 border-b-2 border-[#C89B3C] pb-1 font-serif font-bold text-[#1F4D4F]">
                   Reading list
                 </h2>
-                <div className="grid grid-cols-3 gap-6 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8">
+                <div className="grid grid-cols-2 gap-6 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8">
                   {unreadBooks.map((book) => (
                     <div
                       key={book.isbn}

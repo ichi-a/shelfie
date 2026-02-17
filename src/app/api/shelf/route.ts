@@ -17,7 +17,7 @@ export async function POST(req: Request) {
     console.log("RECEIVE_BODY:", body);
     const { item, score, comment, status } = body;
 
-    // item.isbn が存在するかチェック（念のため）
+    // item.isbn が存在するかチェック
     if (!item?.isbn) {
       console.error("VALIDATION_FAILED: item or isbn is missing");
       return NextResponse.json({ error: "ISBN is required" }, { status: 400 });

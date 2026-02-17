@@ -6,14 +6,13 @@ export async function POST(req: Request) {
   try {
     const { books } = await req.json();
 
-    // 鍵はサーバー側で管理（NEXT_PUBLICなし）
+    // 鍵はサーバー側で管理
     const apiKey = process.env.GEMINI_API_KEY;
 
     if (!apiKey) {
       return NextResponse.json({ error: "API Key error" }, { status: 500 });
     }
 
-    // --- ここから下は、あなたが提示した元のコードをそのまま移植 ---
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({
       model: "gemini-2.5-flash",
