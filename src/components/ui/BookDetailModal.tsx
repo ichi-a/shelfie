@@ -5,7 +5,6 @@ import { AddShelfWithReview } from "./AddShelfWithReview";
 import { AddShelfButton } from "./AddShelfButton";
 import { Book, ModalMode } from "@/types/book";
 import { useEffect } from "react";
-import { Timestamp } from "firebase/firestore";
 import Image from "next/image";
 
 interface BookDetailModalProps {
@@ -99,11 +98,14 @@ export const BookDetailModal = ({
                 本棚に追加した日
               </span>
               <p className="text-sm font-medium text-[#1F4D4F]/80">
-                {selectedBook.addedAt instanceof Timestamp
-                  ? selectedBook.addedAt.toDate().toLocaleDateString("ja-JP")
+                {typeof selectedBook.addedAt === "object" &&
+                "_seconds" in selectedBook.addedAt
+                  ? new Date(
+                      selectedBook.addedAt._seconds * 1000,
+                    ).toLocaleDateString("ja-JP")
                   : selectedBook.addedAt instanceof Date
                     ? selectedBook.addedAt.toLocaleDateString("ja-JP")
-                    : selectedBook.addedAt}
+                    : String(selectedBook.addedAt)}
               </p>
             </div>
           )}

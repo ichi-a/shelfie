@@ -24,9 +24,9 @@ export default function MyShelf() {
   const user = auth.currentUser;
 
   // --- データ取得ロジック ---
-  const fetchBooks = async (uid: string) => {
+  const fetchBooks = async () => {
     try {
-      const data = await getMyShelf(uid);
+      const data = await getMyShelf();
       setBooks(data);
     } catch (error) {
       toast.error("データの取得に失敗しました");
@@ -38,7 +38,7 @@ export default function MyShelf() {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) fetchBooks(user.uid);
+      if (user) fetchBooks();
       else setLoading(false);
     });
     return () => unsubscribe();
@@ -53,8 +53,7 @@ export default function MyShelf() {
   };
 
   const handleUpdate = async () => {
-    const user = auth.currentUser;
-    if (!user || !selectedBook) return;
+    if (!selectedBook) return;
 
     // 未読にするなら status="unread" かつ コメント空、そうでなければ "readed"
     const isSettingToUnread = editScore === 0;
@@ -62,7 +61,7 @@ export default function MyShelf() {
     const newComment = isSettingToUnread ? "" : editComment;
 
     try {
-      await updateBookStatus(user.uid, selectedBook.isbn, {
+      await updateBookStatus(selectedBook.isbn, {
         score: editScore,
         comment: newComment,
         status: newStatus,
@@ -90,10 +89,9 @@ export default function MyShelf() {
   };
 
   const handleDelete = async () => {
-    const user = auth.currentUser;
-    if (!user || !selectedBook) return;
+    if (!selectedBook) return;
     try {
-      await deleteBookFromDb(user.uid, selectedBook.isbn);
+      await deleteBookFromDb(selectedBook.isbn);
       setBooks(books.filter((b) => b.isbn !== selectedBook.isbn));
       setSelectedBook(null);
       setShowDeleteConfirm(false);

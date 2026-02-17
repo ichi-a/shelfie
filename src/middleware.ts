@@ -14,7 +14,7 @@ export function middleware(request: NextRequest) {
 
   if (isProtected) {
     if (!session) {
-      // Cookieがない（未ログイン）ならトップページへ強制送還
+      // Cookieがない（未ログイン）ならトップページへ強制送還(しない)
       console.log(`🚫 Auth Required: Redirecting from ${pathname} to /`);
       return NextResponse.redirect(new URL("/", request.url));
     }

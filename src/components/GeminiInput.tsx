@@ -22,7 +22,7 @@ export const GeminiInput = () => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        const data = await getMyShelf(user.uid);
+        const data = await getMyShelf();
         setUserBooks(data as Book[]);
         setNowUser(true);
       } else {
