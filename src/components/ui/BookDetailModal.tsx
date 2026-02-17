@@ -6,6 +6,7 @@ import { AddShelfButton } from "./AddShelfButton";
 import { Book, ModalMode } from "@/types/book";
 import { useEffect } from "react";
 import { Timestamp } from "firebase/firestore";
+import Image from "next/image";
 
 interface BookDetailModalProps {
   selectedBook: Book | null;
@@ -79,11 +80,15 @@ export const BookDetailModal = ({
       >
         {/* --- 左カラム：画像と削除ボタン --- */}
         <div className="flex h-auto w-full flex-col items-center border-r border-[#1F4D4F]/10 bg-white p-2 md:w-2/5 md:p-8">
-          <div className="mx-auto h-auto w-full max-w-45">
-            <img
-              src={selectedBook.largeImageUrl}
-              className="mx-auto rounded-sm object-cover shadow-2xl"
+          <div className="relative mx-auto w-40 md:w-50">
+            <Image
+              src={selectedBook.largeImageUrl || ""}
+              className="mx-auto rounded-sm object-contain shadow-2xl"
               alt={selectedBook.title}
+              width={0} // 一旦0にする（または目安の数値）
+              height={0} // 一旦0にする
+              sizes="100vw"
+              style={{ width: "100%", height: "auto" }}
             />
           </div>
 
