@@ -21,8 +21,6 @@ export const loginWithGoogle = async () => {
     console.log("ログイン成功:", result.user.displayName);
     toast.success("ログインしました");
 
-    // 画面をリロードしてMiddlewareの制限を解除させる
-    window.location.reload();
     return result.user;
   } catch (error) {
     console.error("ログインエラー:", error);
@@ -39,7 +37,6 @@ export const logout = async () => {
     await fetch("/api/auth/session", { method: "DELETE" });
 
     toast("ログアウトしました");
-    window.location.reload();
   } catch (error) {
     console.error("ログアウトエラー:", error);
     toast.error("ログアウトエラー");

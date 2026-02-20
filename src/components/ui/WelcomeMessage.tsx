@@ -1,26 +1,14 @@
 "use client";
 import { auth } from "@/lib/firebase";
-import { useEffect, useState } from "react";
-import { User } from "firebase/auth";
+import { useEffect } from "react";
 import Image from "next/image";
 import ai_recommend from "@/assets/image/ai_recommend.png";
 import book_detail1 from "@/assets/image/book_detail1.png";
 import my_shelf from "@/assets/image/my_shelf.png";
 import shelf_search from "@/assets/image/shelf_search.png";
+import { DecodedIdToken } from "firebase-admin/auth";
 
-export const Welcome = () => {
-  const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    // ログイン状態が変化したのを検知してセットする
-    const unsubscribe = auth.onAuthStateChanged((currentUser) => {
-      setUser(currentUser);
-    });
-
-    // クリーンアップ処理（リスナーを解除）
-    return () => unsubscribe();
-  }, []);
-
+export const Welcome = ({ user }: { user: DecodedIdToken | null }) => {
   if (user) return null;
 
   // auth.currentUser
