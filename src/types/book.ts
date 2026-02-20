@@ -20,7 +20,11 @@ export interface Book {
   booksGenreId?: string;
   reviewAverage?: string;
   reviewCount?: string;
-  addedAt?: string | Timestamp | Date;
+  addedAt?:
+    | string
+    | Timestamp
+    | Date
+    | ((Timestamp | Date) & Record<"_seconds", unknown>);
   status?: BookStatus;
   bookTitle?: string;
 }

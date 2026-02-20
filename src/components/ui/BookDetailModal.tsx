@@ -78,8 +78,8 @@ export const BookDetailModal = ({
         onClick={(e) => e.stopPropagation()}
       >
         {/* --- 左カラム：画像と削除ボタン --- */}
-        <div className="flex h-auto w-full flex-col items-center border-r border-[#1F4D4F]/10 bg-white p-2 md:w-2/5 md:p-8">
-          <div className="relative mx-auto w-40 md:w-50">
+        <div className="flex h-auto min-h-58 w-full flex-col items-center border-r border-[#1F4D4F]/10 p-2 md:w-2/5 md:p-8">
+          <div className="relative mx-auto min-h-40 w-40 md:w-50">
             <Image
               src={selectedBook.largeImageUrl || ""}
               className="mx-auto rounded-sm object-contain shadow-2xl"
@@ -101,7 +101,7 @@ export const BookDetailModal = ({
                 {typeof selectedBook.addedAt === "object" &&
                 "_seconds" in selectedBook.addedAt
                   ? new Date(
-                      selectedBook.addedAt._seconds * 1000,
+                      (selectedBook.addedAt._seconds as number) * 1000,
                     ).toLocaleDateString("ja-JP")
                   : selectedBook.addedAt instanceof Date
                     ? selectedBook.addedAt.toLocaleDateString("ja-JP")

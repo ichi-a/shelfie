@@ -10,6 +10,7 @@ import { saveBookToDb, getMyShelf } from "@/lib/booksDb";
 import { toast } from "sonner";
 import { BookDetailModal } from "./ui/BookDetailModal";
 import { Book, Ai } from "@/types/book";
+import Image from "next/image";
 
 export const GeminiInput = () => {
   const [recommendation, setRecommendation] = useState<Ai | null>(null);
@@ -123,11 +124,13 @@ export const GeminiInput = () => {
                     className="group flex transform flex-col overflow-hidden rounded-sm border border-black/5 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
                   >
                     {/* 画像枠 - アスペクト比 */}
-                    <div className="flex min-h-49.5 min-w-33 cursor-pointer flex-col items-center justify-center overflow-hidden">
-                      <div className="relative flex-1 overflow-hidden">
-                        <img
-                          src={item.largeImageUrl}
+                    <div className="flex min-h-55 min-w-33 cursor-pointer flex-col items-center justify-center overflow-hidden">
+                      <div className="relative h-full w-full flex-1 overflow-hidden">
+                        <Image
+                          src={item.largeImageUrl || ""}
                           alt={item.title}
+                          sizes="200px"
+                          fill
                           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                         />
                         {/* ホバー時にゴールドのオーバーレイ */}
