@@ -1,8 +1,7 @@
-import { doc, setDoc, serverTimestamp,deleteDoc, updateDoc, collection, getDocs, query, orderBy } from "firebase/firestore";
+import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "./firebase";
 import { toast } from "sonner";
 import { Book } from "@/types/book";
-
 
 /**
  * 楽天APIのデータをバックグラウンドで保存する
@@ -44,8 +43,8 @@ export async function addToMyShelf(
   item: Book,
   score?: number,
   comment?: string,
-  status: "readed" | "unread" = "unread"
-  ) {
+  status: "readed" | "unread" = "unread",
+) {
   try {
     // ユーザー専用の本棚に書き込み
     const res = await fetch("/api/shelf", {
@@ -53,50 +52,50 @@ export async function addToMyShelf(
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ item, score, comment, status }),
     });
-    if(!res.ok) throw new Error("保存に失敗しました");
+    if (!res.ok) throw new Error("保存に失敗しました");
   } catch (e) {
     console.error("マイ本棚保存失敗:", e);
-    toast.error("本棚に登録失敗")
+    toast.error("本棚に登録失敗");
     throw e; // エラーを呼び出し元に伝えてalertなどを出せるようにする
   }
 }
 
-
 //  指定したユーザーの本棚を全件取得する
-export const getMyShelf = async (userId: string): Promise<Book[]> => {
-  const shelfRef = collection(db, "users", userId, "myShelf");
-
-  // 「追加した順」に並べたい
-  const q = query(shelfRef, orderBy("addedAt", "desc"));
-
-  const querySnapshot = await getDocs(q);
-
-  // Snapshotを普通の配列に変換して返す
-  return querySnapshot.docs.map(doc => ({...doc.data()} as Book));
+export const getMyShelf = async (): Promise<Book[]> => {
+  const res = await fetch("/api/shelf");
+  if (!res.ok) throw new Error("本棚の取得に失敗しました");
+  return res.json();
 };
 
-
+//更新
 export const updateBookStatus = async (
-  userId: string,
   isbn: string,
-  updates: { score?: number | null | undefined; comment?: string; status?: "readed" | "unread" }
+  updates: {
+    score?: number | null;
+    comment?: string;
+    status?: "readed" | "unread";
+  },
 ) => {
-  const shelfRef = doc(db, "users", userId, "myShelf", isbn);
+  const res = await fetch("/api/shelf", {
+    method: "PATCH",
+    body: JSON.stringify({ isbn, ...updates }),
+  });
 
-  try {
-    await updateDoc(shelfRef, {
-      ...updates,
-      updatedAt: serverTimestamp()
-    });
-  } catch (e) {
-    console.error("更新失敗:", e);
-    toast.error("更新失敗")
-    throw e;
+  if (!res.ok) {
+    toast.error("更新失敗");
+    throw new Error("更新失敗");
   }
 };
 
 // 本を削除する
-export const deleteBookFromDb = async (userId: string, isbn: string) => {
-  const bookRef = doc(db, "users", userId, "myShelf", isbn);
-  return await deleteDoc(bookRef);
+export const deleteBookFromDb = async (isbn: string) => {
+  const res = await fetch("/api/shelf", {
+    method: "DELETE",
+    body: JSON.stringify({ isbn }),
+  });
+
+  if (!res.ok) {
+    toast.error("削除失敗");
+    throw new Error("削除失敗");
+  }
 };

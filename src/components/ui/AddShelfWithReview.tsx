@@ -7,7 +7,13 @@ import { toast } from "sonner";
 import { Book } from "@/types/book";
 import { logEvent } from "firebase/analytics";
 
-export const AddShelfWithReview = ({ book, onClose }:{book: Book, onClose: () => void}) => {
+export const AddShelfWithReview = ({
+  book,
+  onClose,
+}: {
+  book: Book;
+  onClose: () => void;
+}) => {
   const [score, setScore] = useState(3);
   const [comment, setComment] = useState("");
   const [showForm, setShowForm] = useState(false);
@@ -15,27 +21,30 @@ export const AddShelfWithReview = ({ book, onClose }:{book: Book, onClose: () =>
   const user = auth.currentUser;
 
   const handleSave = async () => {
-
     if (!user) return toast.error("ログインしてください");
 
     // スコアによって status を決める
     const status = score > 0 ? "readed" : "unread";
 
     if (analytics) {
-      logEvent(analytics, 'add_to_shelf', {
+      logEvent(analytics, "add_to_shelf", {
         book_title: book.title,
         book_isbn: book.isbn,
         status: status,
         score: score,
         comment: comment,
-      })
+      });
     }
     try {
       await saveBookToDb(book);
       // 決まった status を第5引数に渡す
-      await addToMyShelf( book, score, comment, status);
+      await addToMyShelf(book, score, comment, status);
 
-      toast.success(status === "readed" ? `本棚に『${book.title}』を追加しました` : `Reading listに『${book.title}』を追加しました`);
+      toast.success(
+        status === "readed"
+          ? `本棚に『${book.title}』を追加しました`
+          : `Reading listに『${book.title}』を追加しました`,
+      );
       setShowForm(false);
       onClose();
     } catch (e) {
@@ -48,7 +57,7 @@ export const AddShelfWithReview = ({ book, onClose }:{book: Book, onClose: () =>
     return (
       <button
         onClick={() => toast.error("ログインしてください")}
-        className="w-full bg-[#C89B3C] text-white py-2 text-xs font-bold tracking-widest uppercase hover:bg-[#b08834] transition-colors rounded-sm shadow-md"
+        className="w-full rounded-sm bg-[#C89B3C] py-2 text-xs font-bold tracking-widest text-white uppercase shadow-md transition-colors hover:bg-[#b08834]"
       >
         本棚に追加する
       </button>
@@ -59,7 +68,7 @@ export const AddShelfWithReview = ({ book, onClose }:{book: Book, onClose: () =>
     return (
       <button
         onClick={() => setShowForm(true)}
-        className="w-full bg-[#C89B3C] text-white py-2 text-xs font-bold tracking-widest uppercase hover:bg-[#b08834] transition-colors rounded-sm shadow-md"
+        className="w-full rounded-sm bg-[#C89B3C] py-2 text-xs font-bold tracking-widest text-white uppercase shadow-md transition-colors hover:bg-[#b08834]"
       >
         本棚に追加する
       </button>
@@ -67,15 +76,18 @@ export const AddShelfWithReview = ({ book, onClose }:{book: Book, onClose: () =>
   }
   //未読を押すとコメント消したい
   const unreadBtn = () => {
-    setScore(0)
-    setComment("")
-  }
+    setScore(0);
+    setComment("");
+  };
 
   return (
-    <div className="border border-[#C89B3C]/30 p-4 mt-2 text-left bg-white shadow-inner rounded-sm space-y-4 animate-in fade-in slide-in-from-top-1 duration-200">
+    <div className="animate-in fade-in slide-in-from-top-1 mt-2 space-y-4 rounded-sm border border-[#C89B3C]/30 bg-white p-4 text-left shadow-inner duration-200">
       <div>
-        <div className="flex justify-between items-center mb-2">
-          <label className="text-[14px] text-[#C89B3C] font-bold uppercase"><span className="text-sm text-[#1F4D4F] font-medium">Score: </span>{score > 0 ? ` ${score}`:"未読" }</label>
+        <div className="mb-2 flex items-center justify-between">
+          <label className="text-[14px] font-bold text-[#C89B3C] uppercase">
+            <span className="text-sm font-medium text-[#1F4D4F]">Score: </span>
+            {score > 0 ? ` ${score}` : "未読"}
+          </label>
         </div>
 
         {/* ★ 星マーク評価（ポチポチ選択） */}
@@ -96,49 +108,53 @@ export const AddShelfWithReview = ({ book, onClose }:{book: Book, onClose: () =>
             ""
           ) : (
             <button
-            type="button"
-            onClick={unreadBtn}
-            className="text-sm text-[#1F4D4F]/40 ml-auto hover:text-[#1F4D4F] underline"
-          >
-            Reading listへ追加
-          </button>
-          ) }
-
+              type="button"
+              onClick={unreadBtn}
+              className="ml-auto text-sm text-[#1F4D4F]/40 underline hover:text-[#1F4D4F]"
+            >
+              Reading listへ追加
+            </button>
+          )}
         </div>
       </div>
 
       <div>
-        <label className="text-[10px] font-bold tracking-wider opacity-60 block mb-1">My Note</label>
+        <label className="mb-1 block text-[10px] font-bold tracking-wider opacity-60">
+          My Note
+        </label>
         {score > 0 && (
           <textarea
-          value={comment}
-          onChange={(e) => setComment(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.nativeEvent.isComposing) return
-            if (e.key === 'Enter' && !e.shiftKey) {
-              e.preventDefault();
-              handleSave?.();
-              (e.target as HTMLElement).blur();
-            }
-          }}
-          className="w-full border border-[#1F4D4F]/10 text-sm p-2 h-20 resize-none bg-white focus:outline-[#C89B3C] focus:ring-1 focus:ring-[#C89B3C] transition-all"
-          maxLength={48}
-          placeholder="この本の感想を一言で表すと？"
-        />)}
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.nativeEvent.isComposing) return;
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                handleSave?.();
+                (e.target as HTMLElement).blur();
+              }
+            }}
+            className="h-20 w-full resize-none border border-[#1F4D4F]/10 bg-white p-2 text-sm transition-all focus:ring-1 focus:ring-[#C89B3C] focus:outline-[#C89B3C]"
+            maxLength={48}
+            placeholder="この本の感想を一言で表すと？"
+          />
+        )}
 
-        <p className="text-[9px] text-right opacity-40 mt-1">{comment?.length} / 48</p>
+        <p className="mt-1 text-right text-[9px] opacity-40">
+          {comment?.length} / 48
+        </p>
       </div>
 
       <div className="flex gap-2">
         <button
           onClick={handleSave}
-          className="flex-1 bg-[#1F4D4F] text-white py-2 rounded-sm text-[10px] font-bold uppercase tracking-widest hover:opacity-90 transition-opacity"
+          className="flex-1 rounded-sm bg-[#1F4D4F] py-2 text-[10px] font-bold tracking-widest text-white uppercase transition-opacity hover:opacity-90"
         >
           追加
         </button>
         <button
           onClick={() => setShowForm(false)}
-          className="flex-1 border border-[#1F4D4F]/20 text-[#1F4D4F]/60 py-2 rounded-sm text-[10px] font-bold uppercase tracking-widest hover:bg-gray-100 transition-colors"
+          className="flex-1 rounded-sm border border-[#1F4D4F]/20 py-2 text-[10px] font-bold tracking-widest text-[#1F4D4F]/60 uppercase transition-colors hover:bg-gray-100"
         >
           Cancel
         </button>

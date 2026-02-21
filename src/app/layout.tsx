@@ -3,12 +3,12 @@ import "./globals.css";
 import { Footer } from "@/components/layout/Footer";
 import { Toaster } from "@/components/ui/sonner";
 
-<meta name="apple-mobile-web-app-title" content="Shelfie" />
-
+<meta name="apple-mobile-web-app-title" content="Shelfie" />;
 
 export const metadata: Metadata = {
   title: "Shelfie",
-  description: "AIによる推薦機能を搭載した読書記録＆支援アプリ。評価やコメントを残して本棚に記録して自分専用の司書AIが次の本を提案してくれます。",
+  description:
+    "AIによる推薦機能を搭載した読書記録＆支援アプリ。評価やコメントを残して本棚に記録して自分専用の司書AIが次の本を提案してくれます。",
   // manifest: "@/manifest.json",
 };
 
@@ -19,12 +19,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
-      <body
-        className={`bg-[#F5F3EF]`}
-      >
+      <body className={`bg-[#F5F3EF]`}>
         {children}
         <Footer />
-        <Toaster position="top-center" richColors/>
+        <Toaster position="top-center" richColors />
       </body>
     </html>
   );

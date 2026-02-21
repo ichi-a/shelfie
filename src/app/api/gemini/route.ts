@@ -6,14 +6,13 @@ export async function POST(req: Request) {
   try {
     const { books } = await req.json();
 
-    // 鍵はサーバー側で管理（NEXT_PUBLICなし）
+    // 鍵はサーバー側で管理
     const apiKey = process.env.GEMINI_API_KEY;
 
     if (!apiKey) {
       return NextResponse.json({ error: "API Key error" }, { status: 500 });
     }
 
-    // --- ここから下は、あなたが提示した元のコードをそのまま移植 ---
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({
       model: "gemini-2.5-flash",
@@ -31,29 +30,31 @@ export async function POST(req: Request) {
                   bookTitle: { type: SchemaType.STRING },
                   author: { type: SchemaType.STRING },
                 },
-                required: ["bookTitle", "author"]
-              }
-            }
+                required: ["bookTitle", "author"],
+              },
+            },
           },
-          required: ["librarianSummary", "recommendedBooks"]
-        }
-      }
+          required: ["librarianSummary", "recommendedBooks"],
+        },
+      },
     });
 
-    const bookshelfData = books.map((b: Book) => {
-  const statusLabel = b.status === "readed" ? "【読了】" : "【Reading List/読みたい】";
+    const bookshelfData = books
+      .map((b: Book) => {
+        const statusLabel =
+          b.status === "readed" ? "【読了】" : "【Reading List/読みたい】";
 
-  // b.score が undefined や null なら 0 を使う
-  const scoreValue = b.score ?? 0;
-  const scoreText = scoreValue > 0 ? `${scoreValue}/5` : "未評価";
+        // b.score が undefined や null なら 0 を使う
+        const scoreValue = b.score ?? 0;
+        const scoreText = scoreValue > 0 ? `${scoreValue}/5` : "未評価";
 
-  return `${statusLabel}
+        return `${statusLabel}
 - 書名: ${b.title}
 - 著者: ${b.author}
 - 満足度: ${scoreText}
 - 読書メモ: ${b.comment || "（コメントなし）"}`;
-}).join('\n\n---\n\n');
-
+      })
+      .join("\n\n---\n\n");
 
     const prompt = `
 あなたはユーザーの本棚を分析する「AI司書」です。
@@ -81,6 +82,9 @@ ${bookshelfData}
     return NextResponse.json(JSON.parse(response.text()));
   } catch (error) {
     console.error("Gemini API Error:", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 },
+    );
   }
 }

@@ -14,22 +14,25 @@ export interface Book {
   // 本棚に保存された時のみ存在するプロパティ
   score?: number | undefined;
   comment?: string;
-  publisherName?: string
-  salesDate?: string
-  affiliateUrl?: string
-  booksGenreId?: string
-  reviewAverage?: string
-  reviewCount?: string
-  addedAt?: string | Timestamp | Date
-  status?: BookStatus
-  bookTitle?: string
+  publisherName?: string;
+  salesDate?: string;
+  affiliateUrl?: string;
+  booksGenreId?: string;
+  reviewAverage?: string;
+  reviewCount?: string;
+  addedAt?:
+    | string
+    | Timestamp
+    | Date
+    | ((Timestamp | Date) & Record<"_seconds", unknown>);
+  status?: BookStatus;
+  bookTitle?: string;
 }
 
-
 // モーダルのモード定義
-export type ModalMode = 'shelf' | 'search' | 'ai';
+export type ModalMode = "shelf" | "search" | "ai";
 
 export interface Ai {
-  librarianSummary: string
-  recommendedBooks: Book[]
+  librarianSummary: string;
+  recommendedBooks: Book[];
 }

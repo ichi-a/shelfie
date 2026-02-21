@@ -1,6 +1,6 @@
-'use client'
+"use client";
 
-import { useState } from "react"
+import { useState } from "react";
 
 interface SearchBarProps {
   onSearch: (query: string) => void;
@@ -8,7 +8,7 @@ interface SearchBarProps {
 }
 
 const SearchBar = ({ onSearch, isLoading }: SearchBarProps) => {
-  const [query, setQuery] = useState("")
+  const [query, setQuery] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,10 +23,10 @@ const SearchBar = ({ onSearch, isLoading }: SearchBarProps) => {
     if (!query.trim() || isLoading) return;
 
     onSearch(query);
-  }
+  };
 
   return (
-    <div className="w-full max-w-2xl mx-auto px-4 mt-8">
+    <div className="mx-auto mt-8 w-full max-w-2xl px-4">
       <form onSubmit={handleSubmit} className="flex items-center gap-2">
         <div className="relative flex-1">
           <input
@@ -34,27 +34,24 @@ const SearchBar = ({ onSearch, isLoading }: SearchBarProps) => {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="本を検索..."
-            className="w-full bg-white border border-[#1F4D4F]/10 px-4 py-3 rounded-sm
-                      text-[#1F4D4F] placeholder-[#1F4D4F]/30 outline-none
-                      focus:border-[#C89B3C] transition-all"
+            className="w-full rounded-sm border border-[#1F4D4F]/10 bg-white px-4 py-3 text-[#1F4D4F] placeholder-[#1F4D4F]/30 transition-all outline-none focus:border-[#C89B3C]"
           />
           {isLoading && (
-            <div className="absolute right-3 top-1/2 -translate-y-1/2">
-              <div className="animate-spin h-4 w-4 border-2 border-[#C89B3C] border-t-transparent rounded-full" />
+            <div className="absolute top-1/2 right-3 -translate-y-1/2">
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-[#C89B3C] border-t-transparent" />
             </div>
           )}
         </div>
 
         <button
           type="submit"
-          className="bg-[#1F4D4F] text-white py-3 px-6 text-sm font-bold uppercase tracking-widest
-                    hover:bg-[#1F4D4F]/90 transition-all rounded-sm shadow-sm active:scale-96"
+          className="rounded-sm bg-[#1F4D4F] px-6 py-3 text-sm font-bold tracking-widest text-white uppercase shadow-sm transition-all hover:bg-[#1F4D4F]/90 active:scale-96"
         >
           検索
         </button>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default SearchBar
+export default SearchBar;

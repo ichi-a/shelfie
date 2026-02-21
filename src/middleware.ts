@@ -10,11 +10,11 @@ export function middleware(request: NextRequest) {
   const protectedPaths = ["/myShelf", "/search"];
 
   // 現在のパスがガード対象リストに含まれているかチェック
-  const isProtected = protectedPaths.some(path => pathname.startsWith(path));
+  const isProtected = protectedPaths.some((path) => pathname.startsWith(path));
 
   if (isProtected) {
     if (!session) {
-      // Cookieがない（未ログイン）ならトップページへ強制送還
+      // Cookieがない（未ログイン）ならトップページへ強制送還(しない)
       console.log(`🚫 Auth Required: Redirecting from ${pathname} to /`);
       return NextResponse.redirect(new URL("/", request.url));
     }
