@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { BookDetailModal } from "@/components/ui/BookDetailModal";
 import { Book, BookStatus } from "@/types/book";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function MyShelf() {
   type Sort = "addedAt" | "author" | "salesDate" | "score";
@@ -139,7 +140,7 @@ export default function MyShelf() {
             {readBooks.length > 0 && (
               <section>
                 <div>
-                  <div className="mb-2 flex gap-3 p-1 text-sm font-semibold text-[#1F4D4F] italic transition-all">
+                  <div className="mb-2 flex gap-1 p-1 text-sm font-semibold text-[#1F4D4F] italic transition-all min-[380px]:gap-3">
                     <div
                       className={`cursor-pointer p-1 ${sortType === "addedAt" && "border-b-2 border-[#C89B3C]"}`}
                       onClick={() => setSortType("addedAt")}
@@ -251,6 +252,13 @@ export default function MyShelf() {
                 </div>
               </section>
             )}
+            <div
+              className={`mt-20 flex w-full items-center justify-center text-[#C89B3C] not-italic`}
+            >
+              <Link href="/screenshot" className="mx-auto block underline">
+                Shelfie
+              </Link>
+            </div>
           </div>
         ) : (
           <div className="mx-auto flex min-h-[50vh] flex-col items-center justify-center px-4 text-center">

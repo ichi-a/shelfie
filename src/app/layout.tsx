@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Footer } from "@/components/layout/Footer";
+
 import { Toaster } from "@/components/ui/sonner";
 
 <meta name="apple-mobile-web-app-title" content="Shelfie" />;
@@ -21,7 +21,7 @@ export default function RootLayout({
     <html lang="ja">
       <body className={`bg-[#F5F3EF]`}>
         {children}
-        <Footer />
+
         <Toaster position="top-center" richColors />
       </body>
     </html>
