@@ -8,6 +8,8 @@ import Link from "next/link";
 import { useEffect, useState, useCallback } from "react";
 import { toast } from "sonner";
 
+type Sort = "addedAt" | "author" | "salesDate" | "score";
+
 function calcGridLayout(
   bookCount: number,
   containerWidth: number,
@@ -46,6 +48,7 @@ function calcGridLayout(
 function ScreenShotPage() {
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
+  const [sortType, setSortType] = useState<Sort>("addedAt");
   const [layout, setLayout] = useState({
     cols: 4,
     itemWidth: 48,
@@ -86,6 +89,16 @@ function ScreenShotPage() {
     return () => window.removeEventListener("resize", updateLayout);
   }, [books.length, updateLayout]);
 
+  //Sortロジック
+  const sortBooks = [...books].sort((a, b) => {
+    if (sortType === "author") return a.author.localeCompare(b.author);
+    if (sortType === "score") return (b.score ?? 0) - (a.score ?? 0);
+    if (sortType === "salesDate")
+      return (b.salesDate ?? "").localeCompare(a.salesDate ?? "");
+    if (sortType === "addedAt") return 0;
+    return 0;
+  });
+
   if (loading)
     return (
       <div className="flex min-h-screen items-center justify-center bg-[#F5F3EF]">
@@ -110,11 +123,11 @@ function ScreenShotPage() {
             gap: "2px",
           }}
         >
-          {books.map((book) => (
+          {sortBooks.map((book) => (
             <div
               key={book.isbn}
               style={{ width: layout.itemWidth, height: layout.itemHeight }}
-              className="relative overflow-hidden rounded bg-white shadow-sm"
+              className="relative overflow-hidden rounded bg-[#1F4D4F]/30 shadow-sm"
             >
               <Image
                 src={book.largeImageUrl || ""}
@@ -128,8 +141,36 @@ function ScreenShotPage() {
           ))}
         </div>
       </div>
+      <div className="mt-30 flex justify-center">
+        <div className="mb-2 flex gap-1 p-1 text-sm font-semibold text-[#1F4D4F] italic transition-all min-[380px]:gap-3">
+          <div
+            className={`cursor-pointer p-1 ${sortType === "addedAt" && "border-b-2 border-[#C89B3C]"}`}
+            onClick={() => setSortType("addedAt")}
+          >
+            登録日順
+          </div>
+          <div
+            className={`cursor-pointer p-1 ${sortType === "author" && "border-b-2 border-[#C89B3C]"}`}
+            onClick={() => setSortType("author")}
+          >
+            作者順
+          </div>
+          <div
+            className={`cursor-pointer p-1 ${sortType === "salesDate" && "border-b-2 border-[#C89B3C]"}`}
+            onClick={() => setSortType("salesDate")}
+          >
+            発売日順
+          </div>
+          <div
+            className={`cursor-pointer p-1 ${sortType === "score" && "border-b-2 border-[#C89B3C]"}`}
+            onClick={() => setSortType("score")}
+          >
+            評価順
+          </div>
+        </div>
+      </div>
 
-      <div className="mt-30 p-4">
+      <div className="mt-15 p-4">
         <Link href="/myShelf" className="text-blue-400 underline">
           ←Back
         </Link>
