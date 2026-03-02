@@ -7,6 +7,8 @@ import ai_recommend from "@/assets/image/ai_recommend.png";
 import book_detail1 from "@/assets/image/book_detail1.png";
 import my_shelf from "@/assets/image/my_shelf.png";
 import shelf_search from "@/assets/image/shelf_search.png";
+import screen_shot from "@/assets/image/screen_shot.png";
+import screen_shot_sp from "@/assets/image/screen_shot_sp.png";
 
 export const Welcome = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -87,6 +89,25 @@ export const Welcome = () => {
             alt="アプリデモ画像"
             fill
             className="object-cover"
+          />
+        </div>
+        <p className="mt-8 border-b-2 border-[#1F4D4F]/20 pb-1 font-medium text-[#1F4D4F]/90">
+          スクリーンショット専用ページもあります！
+        </p>
+        <div className="relative mb-10 hidden aspect-16/8 w-full max-w-300 overflow-hidden md:block">
+          <Image
+            src={screen_shot}
+            alt="アプリデモ画像"
+            fill
+            className="object-contain"
+          />
+        </div>
+        <div className="relative mb-10 aspect-4/9 w-full max-w-300 overflow-hidden md:hidden">
+          <Image
+            src={screen_shot_sp}
+            alt="アプリデモ画像"
+            fill
+            className="object-contain"
           />
         </div>
       </div>
