@@ -172,7 +172,7 @@ export default function MyShelf() {
                     <div
                       key={book.isbn}
                       onClick={() => openModal(book)}
-                      className="group group z-1 m-3 mx-auto flex min-h-49.5 min-w-33 transform cursor-pointer flex-col overflow-hidden rounded bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+                      className="group group z-1 m-3 mx-auto flex min-h-49.5 min-w-33 transform cursor-pointer flex-col overflow-hidden rounded bg-white/80 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
                     >
                       {/* {sortType === "author" && (<div className="line-clamp-1 rounded bg-black/40 text-white text-[9px] px-1 font-bold">{book.author}</div>)} */}
                       <div className="relative flex-1 overflow-hidden bg-[#1F4D4F]/30">
@@ -210,7 +210,7 @@ export default function MyShelf() {
                       </div>
 
                       {sortType === "author" && (
-                        <div className="z-10 mt-2 mb-1 line-clamp-1 rounded px-1 text-center text-[11px] font-bold text-[#1F4D4F] group-hover:text-[#C89B3C]">
+                        <div className="z-10 mt-2 mb-1 line-clamp-1 w-33 rounded px-1 text-center text-[11px] font-bold text-[#1F4D4F] group-hover:text-[#C89B3C]">
                           {book.author}
                         </div>
                       )}
