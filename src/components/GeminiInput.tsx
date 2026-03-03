@@ -16,6 +16,7 @@ export const GeminiInput = () => {
   const [recommendation, setRecommendation] = useState<Ai | null>(null);
   const [bookDetails, setBookDetails] = useState<Book[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingAuth, setIsLoadingAuth] = useState(false);
   const [nowUser, setNowUser] = useState(false);
   const [userBooks, setUserBooks] = useState<Book[]>([]);
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
@@ -23,9 +24,11 @@ export const GeminiInput = () => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
+        setIsLoadingAuth(true);
         const data = await getMyShelf();
         setUserBooks(data as Book[]);
         setNowUser(true);
+        setIsLoadingAuth(false);
       } else {
         setNowUser(false);
       }
@@ -79,6 +82,11 @@ export const GeminiInput = () => {
 
   return (
     <div className="mx-auto mt-10 mb-44 w-full max-w-350 rounded-sm border border-[#1F4D4F]/10 bg-white/30 px-5 py-12 text-center shadow-inner">
+      {isLoadingAuth && (
+        <div className="my-10 animate-pulse">
+          <p className="text-[#1F4D4F] md:text-xl">Loading...</p>
+        </div>
+      )}
       {nowUser && (
         <div className="space-y-6">
           <div className="space-y-2">
