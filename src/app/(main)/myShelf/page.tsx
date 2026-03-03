@@ -123,9 +123,17 @@ export default function MyShelf() {
 
   if (loading)
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#F5F3EF]">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#C89B3C] border-t-transparent" />
-      </div>
+      <>
+        <header className="mb-8 pt-17 text-center">
+          <h1 className="mb-2 font-serif text-3xl font-bold text-[#1F4D4F]">
+            My Library
+          </h1>
+          <div className="mx-auto h-1 w-12 bg-[#C89B3C]" />
+        </header>
+        <div className="mt-50 flex items-center justify-center bg-[#F5F3EF]">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#C89B3C] border-t-transparent" />
+        </div>
+      </>
     );
 
   return (
