@@ -165,6 +165,16 @@ export default function MyShelf() {
                     >
                       評価順
                     </div>
+                    <div
+                      className={`ml-auto flex items-center justify-center text-[#1F4D4F] hover:text-[#C89B3C] min-[420px]:pr-10 md:pr-20`}
+                    >
+                      <Link
+                        href="/screenshot"
+                        className="mx-auto block underline"
+                      >
+                        Shelfie
+                      </Link>
+                    </div>
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-6 min-[480px]:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8">
@@ -252,13 +262,6 @@ export default function MyShelf() {
                 </div>
               </section>
             )}
-            <div
-              className={`mt-20 flex w-full items-center justify-center text-[#C89B3C] not-italic`}
-            >
-              <Link href="/screenshot" className="mx-auto block underline">
-                Shelfie
-              </Link>
-            </div>
           </div>
         ) : (
           <div className="mx-auto flex min-h-[50vh] flex-col items-center justify-center px-4 text-center">

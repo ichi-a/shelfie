@@ -109,13 +109,13 @@ function ScreenShotPage() {
   return (
     <section className="flex min-h-screen flex-col p-5">
       <header className="mb-5 text-center">
-        <h1 className="mb-2 font-serif text-3xl font-bold text-[#1F4D4F]">
+        <h1 className="my-2 font-serif text-3xl font-bold text-[#1F4D4F]">
           Shelfie
         </h1>
         <div className="mx-auto h-1 w-12 bg-[#C89B3C]" />
       </header>
 
-      <div className="flex flex-1 items-center justify-center">
+      <div className="mt-2 flex flex-1 items-center justify-center">
         <div
           style={{
             display: "grid",
@@ -141,7 +141,7 @@ function ScreenShotPage() {
           ))}
         </div>
       </div>
-      <div className="mt-30 flex justify-center">
+      <div className="mt-30 flex justify-center lg:mt-40">
         <div className="mb-2 flex gap-1 p-1 text-sm font-semibold text-[#1F4D4F] italic transition-all min-[380px]:gap-3">
           <div
             className={`cursor-pointer p-1 ${sortType === "addedAt" && "border-b-2 border-[#C89B3C]"}`}
