@@ -18,7 +18,7 @@ export function CarouselDemo() {
           <CarouselItem key={i}>
             <div className={`space-y-5`}>
               <div className="">{item.description}</div>
-              <div className="relative mb-10 aspect-5/9 w-full overflow-hidden md:aspect-16/8 md:max-w-1000">
+              <div className="relative mb-10 aspect-6/14 w-full overflow-hidden md:aspect-16/8 md:max-w-420">
                 <Image
                   src={item.imgUrl}
                   alt="アプリデモ画像"
