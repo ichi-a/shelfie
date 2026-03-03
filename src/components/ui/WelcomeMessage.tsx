@@ -2,13 +2,7 @@
 import { auth } from "@/lib/firebase";
 import { useEffect, useState } from "react";
 import { User } from "firebase/auth";
-import Image from "next/image";
-import ai_recommend from "@/assets/image/ai_recommend.png";
-import book_detail1 from "@/assets/image/book_detail1.png";
-import my_shelf from "@/assets/image/my_shelf.png";
-import shelf_search from "@/assets/image/shelf_search.png";
-import screen_shot from "@/assets/image/screen_shot.png";
-import screen_shot_sp from "@/assets/image/screen_shot_sp.png";
+import { CarouselDemo } from "./CarouselBase";
 
 export const Welcome = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -41,75 +35,11 @@ export const Welcome = () => {
           </p>
         </>
       )}
-      <div className="mx-auto mt-80 grid w-13/14 max-w-400 grid-cols-1 justify-items-center gap-5 rounded border border-[#1F4D4F]/30 bg-[#C89B3C]/10 p-4 pt-9">
+      <div className="mx-auto mt-10 grid h-13/14 w-13/14 max-w-400 grid-cols-1 justify-items-center gap-5 rounded border border-[#1F4D4F]/30 bg-[#C89B3C]/10 p-4 pt-9">
         <p className="p-1 font-serif text-xl font-bold text-[#1F4D4F]">
           アプリ紹介
         </p>
-        <div className="mx-auto mb-15 h-1 w-62 bg-[#C89B3C]" />
-        <p className="mt-8 border-b-2 border-[#1F4D4F]/20 pb-1 font-medium text-[#1F4D4F]/90">
-          AI司書があなたの本棚を分析しベストな１冊を提案します！
-        </p>
-        <div className="relative mb-10 aspect-16/12 w-full max-w-300 overflow-hidden rounded border border-[#1F4D4F]/80 shadow-xl">
-          <Image
-            priority
-            src={ai_recommend}
-            alt="アプリデモ画像"
-            fill
-            className="object-cover"
-          />
-        </div>
-        <p className="mt-26 border-b-2 border-[#1F4D4F]/20 pb-1 font-medium text-[#1F4D4F]/90">
-          キーワード検索で本を本棚に追加しましょう！
-        </p>
-        <div className="relative mb-10 aspect-16/12 w-full max-w-300 overflow-hidden rounded border border-[#1F4D4F]/80 shadow-xl">
-          <Image
-            src={shelf_search}
-            alt="アプリデモ画像"
-            fill
-            className="object-cover"
-          />
-        </div>
-        <p className="mt-8 border-b-2 border-[#1F4D4F]/20 pb-1 font-medium text-[#1F4D4F]/90">
-          本棚にお気に入りの本を並べましょう！
-        </p>
-        <div className="relative mb-10 aspect-16/12 w-full max-w-300 overflow-hidden rounded border border-[#1F4D4F]/80 shadow-xl">
-          <Image
-            src={my_shelf}
-            alt="アプリデモ画像"
-            fill
-            className="object-cover"
-          />
-        </div>
-        <p className="mt-8 border-b-2 border-[#1F4D4F]/20 pb-1 font-medium text-[#1F4D4F]/90">
-          スコアやコメントを残してAI司書の提案の精度を上げましょう！
-        </p>
-        <div className="relative mb-10 aspect-16/12 w-full max-w-300 overflow-hidden rounded border border-[#1F4D4F]/80 shadow-xl">
-          <Image
-            src={book_detail1}
-            alt="アプリデモ画像"
-            fill
-            className="object-cover"
-          />
-        </div>
-        <p className="mt-8 border-b-2 border-[#1F4D4F]/20 pb-1 font-medium text-[#1F4D4F]/90">
-          スクリーンショット専用ページもあります！
-        </p>
-        <div className="relative mb-10 hidden aspect-16/8 w-full max-w-300 overflow-hidden md:block">
-          <Image
-            src={screen_shot}
-            alt="アプリデモ画像"
-            fill
-            className="object-contain"
-          />
-        </div>
-        <div className="relative mb-10 aspect-4/9 w-full max-w-300 overflow-hidden md:hidden">
-          <Image
-            src={screen_shot_sp}
-            alt="アプリデモ画像"
-            fill
-            className="object-contain"
-          />
-        </div>
+        <CarouselDemo />
       </div>
     </div>
   );
