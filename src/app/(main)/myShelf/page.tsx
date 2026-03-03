@@ -140,7 +140,7 @@ export default function MyShelf() {
             {readBooks.length > 0 && (
               <section>
                 <div>
-                  <div className="mb-2 flex gap-1 p-1 text-sm font-semibold text-[#1F4D4F] italic transition-all min-[380px]:gap-3">
+                  <div className="mb-2 flex gap-1 p-0.5 text-sm font-semibold text-[#1F4D4F] italic transition-all max-sm:text-[13px] min-[445px]:gap-3">
                     <div
                       className={`cursor-pointer p-1 ${sortType === "addedAt" && "border-b-2 border-[#C89B3C]"}`}
                       onClick={() => setSortType("addedAt")}
@@ -166,13 +166,13 @@ export default function MyShelf() {
                       評価順
                     </div>
                     <div
-                      className={`ml-auto flex items-center justify-center text-[#1F4D4F] hover:text-[#C89B3C] min-[420px]:pr-10 md:pr-20`}
+                      className={`ml-auto flex items-center justify-center font-bold text-[#1F4D4F] hover:text-[#C89B3C] min-[420px]:pr-10 md:pr-20`}
                     >
                       <Link
                         href="/screenshot"
                         className="mx-auto block underline"
                       >
-                        Shelfie
+                        Screen shot
                       </Link>
                     </div>
                   </div>
