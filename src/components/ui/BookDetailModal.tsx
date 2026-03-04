@@ -78,7 +78,7 @@ export const BookDetailModal = ({
         onClick={(e) => e.stopPropagation()}
       >
         {/* --- 左カラム：画像と削除ボタン --- */}
-        <div className="flex h-auto min-h-58 w-full flex-col items-center border-[#1F4D4F]/20 p-2 pb-22 max-md:h-1/2 max-md:border-b md:w-2/5 md:border-r md:p-8">
+        <div className="flex h-auto min-h-58 w-full flex-col items-center border-[#1F4D4F]/20 p-2 pb-24 max-md:h-1/2 max-md:border-b md:w-2/5 md:border-r md:p-8">
           <div className="relative mx-auto min-h-40 w-40 md:w-50">
             <Image
               src={selectedBook.largeImageUrl || ""}
